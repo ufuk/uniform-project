@@ -1,0 +1,185 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdminOrModerator}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+			Yorumlar · Yönetim
+		</ui:define>
+		<ui:define name="content">
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Yorumlar</h1>
+	    		<p class="lead">
+	    			Buradan onay bekleyen yorumları yayına alabilir veya reddedebilir, 
+	    			yayındaki yorumları yayından kaldırabilir, ve dilerseniz yorumları silebilirsiniz.
+	    		</p>
+	  		</header>
+	  		<!-- /Page Header -->
+			
+			<div class="row">
+				<div class="span2">
+						<ul class="nav nav-list" style="padding: 0px;">
+							<li>
+								<h3 style="line-height: 36px; font-size: 19.5px; font-weight: normal;">
+									Menü
+								</h3>
+							</li>
+							<li>								
+								<h:link outcome="moderateComments">
+									<i class="icon-ok-circle"></i> Yayındakiler
+									<f:param name="confirmationStatus" value="CONFIRMED" />
+								</h:link>
+							</li>
+							<li>
+								<h:link outcome="moderateComments">
+									<i class="icon-question-sign"></i> Onay Bekleyenler
+									<f:param name="confirmationStatus" value="PENDING" />
+								</h:link>
+							</li>
+							<li>
+								
+								<h:link outcome="moderateComments">
+									<i class="icon-ban-circle"></i> Reddedilmişler
+									<f:param name="confirmationStatus" value="NOT_CONFIRMED" />
+								</h:link>
+							</li>
+							<li>
+								<h:link outcome="moderateComments">
+									<i class="icon-trash"></i> Silinmişler
+									<f:param name="confirmationStatus" value="DELETED" />
+								</h:link>
+							</li>
+						</ul>
+				</div><!-- end of span2 -->
+				
+				<div class="span10">
+					<c:if test="#{moderateCommentsBackingBean.confirmationStatus == 'CONFIRMED'}">
+						<legend>Yayınlanmakta Olan Yorumlar</legend>	
+					</c:if>
+					<c:if test="#{moderateCommentsBackingBean.confirmationStatus == 'PENDING'}">
+						<legend>Onay Bekleyen Yorumlar</legend>	
+					</c:if>
+					<c:if test="#{moderateCommentsBackingBean.confirmationStatus == 'NOT_CONFIRMED'}">
+						<legend>Reddedilmiş Yorumlar</legend>	
+					</c:if>
+					<c:if test="#{moderateCommentsBackingBean.confirmationStatus == 'DELETED'}">
+						<legend>Silinmiş Yorumlar</legend>	
+					</c:if>
+					
+					<c:if test="#{empty moderateCommentsBackingBean.commentList}">
+						Yok ki...
+					</c:if>		
+					<h:dataTable styleClass="table"
+								value="#{moderateCommentsBackingBean.commentList}"
+								var="comment"
+								rendered="#{! empty moderateCommentsBackingBean.commentList}">
+						<h:column>
+							<f:facet name="header">Yorum</f:facet>
+							#{comment.content}
+						</h:column>
+						<h:column>
+							<f:facet name="header">Yazar</f:facet>
+							<div class="submitDiv">
+								<h:link value="#{comment.author.fullName}"
+										rendered="#{!comment.writtenByVisitor}"
+										outcome="profile"
+										rel="tooltip"
+										data-toggle="tooltip"
+										title="Profiline git">
+									<f:param name="userId" value="#{comment.author.id}" />
+								</h:link>
+							</div>
+							<h:outputLink value="mailto:#{comment.visitorEmail}"
+										rel="tooltip"
+										data-toggle="tooltip"
+										title="#{comment.visitorEmail}"
+										rendered="#{comment.writtenByVisitor}">
+								#{comment.visitorName}
+							</h:outputLink>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Şu Makaleye</f:facet>
+							<div class="submitDiv">
+								<h:link value="#{comment.article.title}" outcome="articleDetail">
+									<f:param name="articleId" value="#{comment.article.id}" />
+								</h:link>
+							</div>
+						</h:column>
+						<h:column rendered="#{moderateCommentsBackingBean.confirmationStatus ne 'DELETED'}">
+							<h:form style="padding: 0px; margin: 0px;">
+								<div class="submitDiv">
+									<h:commandLink rendered="#{moderateCommentsBackingBean.confirmationStatus eq 'CONFIRMED'}"
+												value="Yayından Kaldır"
+												action="#{moderateCommentsBackingBean.cancelCommentConfirmationAction(comment)}">
+										<f:param name="confirmationStatus"
+												value="#{moderateCommentsBackingBean.confirmationStatus}" />
+										<f:ajax execute="@form" render="@all" />
+									</h:commandLink>
+									<h:commandLink rendered="#{moderateCommentsBackingBean.confirmationStatus ne 'CONFIRMED'}"
+												value="Yayınla"
+												action="#{moderateCommentsBackingBean.confirmCommentAction(comment)}">
+										<f:param name="confirmationStatus"
+												value="#{moderateCommentsBackingBean.confirmationStatus}" />
+										<f:ajax execute="@form" render="@all" />
+									</h:commandLink>
+								</div>
+							</h:form>
+						</h:column>
+						<h:column rendered="#{moderateCommentsBackingBean.confirmationStatus eq 'PENDING'}">
+							<h:form style="padding: 0px; margin: 0px;">
+								<div class="submitDiv">
+									<h:commandLink value="Reddet"
+												action="#{moderateCommentsBackingBean.rejectCommentAction(comment)}">
+										<f:param name="confirmationStatus"
+												value="#{moderateCommentsBackingBean.confirmationStatus}" />
+										<f:ajax execute="@form" render="@all" />
+									</h:commandLink>
+								</div>
+							</h:form>
+						</h:column>
+						<h:column rendered="#{moderateCommentsBackingBean.confirmationStatus eq 'DELETED'}">
+							<h:form style="padding: 0px; margin: 0px;">
+								<div class="submitDiv">
+									<h:commandLink value="Yayınla"
+												action="#{moderateCommentsBackingBean.confirmCommentAction(comment)}">
+										<f:param name="confirmationStatus"
+												value="#{moderateCommentsBackingBean.confirmationStatus}" />
+										<f:ajax execute="@form" render="@all" />
+									</h:commandLink>
+								</div>
+							</h:form>
+						</h:column>
+						<h:column>
+							<h:form style="padding: 0px; margin: 0px;">
+								<div class="submitDiv">
+									<h:commandLink rendered="#{moderateCommentsBackingBean.confirmationStatus ne 'DELETED'}"
+												value="Sil"
+												action="#{moderateCommentsBackingBean.deleteCommentAction(comment)}">
+										<f:param name="confirmationStatus"
+												value="#{moderateCommentsBackingBean.confirmationStatus}" />
+										<f:ajax execute="@form" render="@all" />
+									</h:commandLink>
+									<h:commandLink rendered="#{moderateCommentsBackingBean.confirmationStatus eq 'DELETED'}"
+												value="Sil (Kalıcı Olarak)"
+												action="#{moderateCommentsBackingBean.deleteCommentPermanentlyAction(comment)}">
+										<f:param name="confirmationStatus"
+												value="#{moderateCommentsBackingBean.confirmationStatus}" />
+										<f:ajax execute="@form" render="@all" />
+									</h:commandLink>
+								</div>
+							</h:form>					
+						</h:column>
+					</h:dataTable>
+				</div><!-- end of span10 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

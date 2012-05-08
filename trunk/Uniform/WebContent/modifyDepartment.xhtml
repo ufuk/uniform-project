@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+		<f:event type="preRenderView" listener="#{modifyDepartmentBackingBean.init}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    #{modifyDepartmentBackingBean.department.name} · Bölüm Düzenleme
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Bölüm Düzenleme</h1>
+	    		<p class="lead">'#{modifyDepartmentBackingBean.department.name}' adlı bölümü düzenlemek üzeresiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Modify Department Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Bölüm Düzenleme</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Bölümün Adı" />
+								<div class="controls">
+									<h:inputText value="#{modifyDepartmentBackingBean.name}"
+						    					required="true"
+						    					requiredMessage="'Bölümün Adı' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" style="margin-right: 4px;" value="Kaydet"
+												action="#{modifyDepartmentBackingBean.modifyAction}">
+										<f:ajax execute="@form" render="@all" />
+										<f:param name="departmentId" value="#{modifyDepartmentBackingBean.department.id}" />
+			    					</h:commandLink>
+			    					<h:link styleClass="btn" value="Vazgeç" outcome="administerDepartments" />
+			    				</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Modify Department Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

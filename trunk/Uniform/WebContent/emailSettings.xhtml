@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+		<f:event type="preRenderView" listener="#{emailSettingsBackingBean.init}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    E-posta Ayarları
+		</ui:define>
+		<ui:define name="content">
+
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>E-posta Ayarları</h1>
+	    		<p class="lead">Buradan otomatik e-posta gönderimlerinde kullanılacak olan SMTP posta sunucusu ayarlarını  değiştirebilirsiniz.</p>
+	  		</header>
+			<!-- /Page Header -->
+			
+			<div class="row">
+				<div class="span12">
+					<h:form styleClass="form-horizontal">
+					<legend>Güncel E-posta Ayarları</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="SMTP sunucusu (host)" />
+								<div class="controls">
+						    		<h:inputText value="#{emailSettingsBackingBean.host}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Port" />
+								<div class="controls">
+									<h:inputText value="#{emailSettingsBackingBean.port}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kullanıcı (e-posta adresi)" />
+								<div class="controls">
+				   					<h:inputText value="#{emailSettingsBackingBean.user}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Parola" />
+								<div class="controls">
+						    		<h:inputText value="#{emailSettingsBackingBean.password}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="TLS-korumalı bağlantı" />
+								<div class="controls">
+						    		<h:selectBooleanCheckbox value="#{emailSettingsBackingBean.starttlsEnable}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kimlik doğrulama" />
+								<div class="controls">
+						    		<h:selectBooleanCheckbox value="#{emailSettingsBackingBean.authentication}" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary"
+												value="Güncelle" 
+												action="#{emailSettingsBackingBean.modifyAction}">
+										<f:ajax execute="@form" render="@all" />
+			    					</h:commandLink>
+			    				</div>
+							</div>
+						</fieldset>
+					</h:form>
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

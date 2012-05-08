@@ -1,0 +1,141 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfLoggedIn}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Üye Kaydı
+		</ui:define>
+		<ui:define name="content">
+
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Üye Kaydı</h1>
+	    		<p class="lead">Üye olmak için lütfen aşağıdaki formu doldurun. Üyeliğiniz onaylandığında e-posta ile bilgilendirileceksiniz.</p>
+	  		</header>
+			<!-- /Page Header -->
+			
+			<div class="row">
+				<div class="span12">
+					<!-- Login Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Kayıt Formu</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Ad" />
+								<div class="controls">
+						    		<h:inputText value="#{registerBackingBean.name}"
+						    				required="true"
+						    				requiredMessage="'Ad' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Soyad" />
+								<div class="controls">
+									<h:inputText value="#{registerBackingBean.surname}"
+	 										required="true"
+	 										requiredMessage="'Soyad' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Cinsiyet" />
+								<div class="controls">
+					    			<h:selectOneMenu value="#{registerBackingBean.sex}"
+					    							required="true"
+					    							requiredMessage="Lütfen cinsiyetinizi belirtiniz">
+										<f:selectItem itemValue="" itemLabel="" />
+					    				<f:selectItem itemValue="MALE" itemLabel="Erkek" />
+					    				<f:selectItem itemValue="FEMALE" itemLabel="Kadın" />
+					    			</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="E-posta" />
+								<div class="controls">
+				   					<h:inputText value="#{registerBackingBean.email}"
+						    					required="true"
+						    					requiredMessage="'E-posta' alanı boş bırakılamaz"
+						    					validatorMessage="Lütfen geçerli bir e-posta adresi giriniz">
+				   						<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+				   					</h:inputText>
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Parola" />
+								<div class="controls">
+						    		<h:inputSecret value="#{registerBackingBean.password}"
+						    					required="true"
+						    					requiredMessage="'Parola' alanı boş bırakılamaz"
+						    					validator="#{registerBackingBean.validatePassword}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Parola (tekrar)" />
+								<div class="controls">
+						    		<h:inputSecret value="#{registerBackingBean.passwordAgain}"
+						    					validator="#{registerBackingBean.validatePasswordAgain}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kullanıcı Türü" />
+								<div class="controls">
+					    			<h:selectOneMenu value="#{registerBackingBean.userRole}"
+					    							required="true"
+					    							requiredMessage="Lütfen kullanıcı türünü belirtiniz">
+					    				<f:selectItem itemValue="" itemLabel="" />
+					    				<f:selectItem itemValue="STUDENT" itemLabel="Öğrenci" />
+				   						<f:selectItem itemValue="PROFESSOR" itemLabel="Öğretim Üyesi" />
+				   						<f:selectItem itemValue="GRADUATED" itemLabel="Mezun" />
+					    			</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Bölüm" />
+								<div class="controls">
+					    			<h:selectOneMenu value="#{registerBackingBean.departmentId}">
+					    				<f:selectItem itemValue="" itemLabel="" />
+					    				<f:selectItems value="#{registerBackingBean.departmentList}"
+					    							var="department"
+					    							itemValue="#{department.id}"
+					    							itemLabel="#{department.name}" />
+					    			</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Hakkınızda" />
+								<div class="controls">
+					    			<h:inputTextarea value="#{registerBackingBean.about}"
+					    							styleClass="input-xlarge"
+					    							required="false" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-danger"
+												value="Kayıt" 
+												action="#{registerBackingBean.registerAction}">
+										<f:ajax execute="@form" render="@all" />
+			    					</h:commandLink>
+			    				</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Login Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotLoggedIn}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Yeni Makale
+		</ui:define>
+		<ui:define name="content">
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Yeni Makale</h1>
+	    		<p class="lead">Yeni bir makale eklemek için lütfen aşağıdaki formu doldurun. Makaleniz onaylanıp yayına sokulduğunda e-posta ile bilgilendirileceksiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Add Article Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Yeni Makale</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Başlık" />
+								<div class="controls">
+									<h:inputText value="#{addArticleBackingBean.title}"
+						    					required="true"
+						    					requiredMessage="'Başlık' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="İçerik" />
+								<div class="controls">
+						    		<p:editor value="#{addArticleBackingBean.content}"
+						    				required="true"
+						    				requiredMessage="'İçerik' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kategori" />
+								<div class="controls">
+						    		<h:selectOneMenu value="#{addArticleBackingBean.categoryId}"
+					    							required="true"
+					    							requiredMessage="Lütfen kategoriyi seçiniz">
+					    				<f:selectItem itemValue="" itemLabel="" />
+					    				<f:selectItems value="#{addArticleBackingBean.categoryList}"
+					    							var="category"
+					    							itemValue="#{category.id}"
+					    							itemLabel="#{category.title}" />
+					    			</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" value="Ekle" 
+												action="#{addArticleBackingBean.addArticleAction}">
+										<f:ajax execute="@form" render="@all" />												
+									</h:commandLink>
+								</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Add Article Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

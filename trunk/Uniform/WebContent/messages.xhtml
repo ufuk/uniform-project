@@ -1,0 +1,113 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotLoggedIn}" />
+	</f:metadata>
+
+	<ui:composition template="messagingTemplate.xhtml">
+		<ui:define name="messagingTitle">
+		    Mesajlar
+		</ui:define>
+		<ui:define name="messagingContent">
+			
+			<c:if test="#{messagesBackingBean.type == 'ACTIVE'}">
+				<legend>Mesajlar</legend>	
+			</c:if>
+			<c:if test="#{messagesBackingBean.type == 'ARCHIVE'}">
+				<legend>Arşivlenmiş Mesajlar</legend>	
+			</c:if>
+			<c:if test="#{empty messagesBackingBean.messageList}">
+				Yok ki...
+			</c:if>
+			<h:dataTable styleClass="table"
+						value="#{messagesBackingBean.messageList}"
+						var="message"
+						rendered="#{! empty messagesBackingBean.messageList}">
+				<h:column>
+					<f:facet name="header">Mesaj</f:facet>
+					<h:link value="#{message.title}"
+							outcome="readMessage"
+							rendered="#{messagesBackingBean.type == 'ARCHIVE'}">
+						<f:param name="messageId" value="#{message.id}" />
+					</h:link>
+					<h:link value="#{message.title}"
+							style="font-weight: bold;"
+							outcome="readAndReplyMessage"
+							rel="tooltip"
+							data-toggle="tooltip"
+							title="Okunmamış"
+							rendered="#{messagesBackingBean.type != 'ARCHIVE'
+										and ((userBean.currentUser.id == message.sender.id and !message.readedBySender)
+											or (userBean.currentUser.id == message.receiver.id and !message.readedByReceiver))}">
+						<f:param name="messageId" value="#{message.id}" />
+					</h:link>
+					<h:link value="#{message.title}"
+							outcome="readAndReplyMessage"
+							rel="tooltip"
+							data-toggle="tooltip"
+							title="Okunmuş"
+							rendered="#{messagesBackingBean.type != 'ARCHIVE'
+										and ((userBean.currentUser.id == message.sender.id and message.readedBySender)
+											or (userBean.currentUser.id == message.receiver.id and message.readedByReceiver))}">
+						<f:param name="messageId" value="#{message.id}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Kimden?</f:facet>
+					<h:link value="#{message.sender.fullName}"
+							outcome="profile"
+							rendered="#{message.sender.id != userBean.currentUser.id}"
+							rel="tooltip"
+							data-toggle="tooltip"
+							title="Profiline git">
+						<f:param name="userId" value="#{message.sender.id}" />
+					</h:link>
+					<h:outputLabel rendered="#{message.sender.id == userBean.currentUser.id}">
+						Sen
+					</h:outputLabel>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Kime?</f:facet>
+					<h:link value="#{message.receiver.fullName}"
+							outcome="profile"
+							rendered="#{message.receiver.id != userBean.currentUser.id}"
+							rel="tooltip"
+							data-toggle="tooltip"
+							title="Profiline git">
+						<f:param name="userId" value="#{message.sender.id}" />
+					</h:link>
+					<h:outputLabel rendered="#{message.receiver.id == userBean.currentUser.id}">
+						Sen
+					</h:outputLabel>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Tarih</f:facet>
+			    	<h:outputText value="#{message.sentDate}">
+						<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<h:form style="margin: 0px; padding: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Arşivle"
+										action="#{messagesBackingBean.moveToArchiveAction(message)}"
+										rendered="#{messagesBackingBean.type == 'ACTIVE'}">
+								<f:ajax execute="@form" render="@all" />
+							</h:commandLink>
+							<h:commandLink value="Sil"
+										action="#{messagesBackingBean.deleteAction(message)}"
+										rendered="#{messagesBackingBean.type == 'ARCHIVE'}">
+								<f:ajax execute="@form" render="@all" />
+								<f:param name="type" value="ARCHIVE" />
+							</h:commandLink>
+						</div>
+					</h:form>
+				</h:column>
+			</h:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

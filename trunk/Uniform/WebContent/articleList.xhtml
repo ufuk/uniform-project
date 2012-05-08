@@ -1,0 +1,150 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    <c:if test="#{empty articleListBackingBean.category}">
+	    		Makaleler
+    		</c:if>
+    		<c:if test="#{! empty articleListBackingBean.category}">
+    			#{articleListBackingBean.category.title} · Makaleler
+    		</c:if>
+		</ui:define>
+		<ui:define name="content">
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Makaleler</h1>
+	    		<c:if test="#{empty articleListBackingBean.category}">
+	    			<p class="lead">Yayınlanmakta olan tüm makalelere buradan ulaşabilirsiniz.</p>
+	    		</c:if>
+	    		<c:if test="#{! empty articleListBackingBean.category}">
+	    			<p class="lead">"#{articleListBackingBean.category.title}" kategorisine gönderilmiş olan tüm makalelere buradan ulaşabilirsiniz.</p>
+	    		</c:if>
+	    	</header>
+			<!-- /Page Header -->
+			
+			<div class="row">
+				<div class="span9">
+				    <c:if test="#{! empty articleListBackingBean.articleList}">
+						<ui:repeat value="#{articleListBackingBean.paginator.model}" var="article">
+					    	<hr />
+					    	<!-- Header -->
+							<header class="jumbotron subhead">
+					    		<h2>
+						    		<h:link style="color: black;" outcome="articleDetail">
+						    			#{article.title}
+						    			<f:param name="articleId" value="#{article.id}" />
+						    		</h:link>
+					    		</h2>			    		
+					    		<em>
+									<i class="icon-calendar"></i> <b> </b>
+									<h:outputText value="#{article.publishedDate}">
+										<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+									</h:outputText> tarihinde 
+									<h:link rendered="#{article.category != null}"
+											outcome="articleList"
+											value="#{article.category.title}"
+											rel="tooltip"
+											data-toggle="tooltip"
+											title="Tümünü gör">
+										<f:param name="categoryId" value="#{article.category.id}" />
+									</h:link>
+									<h:outputText value=" kategorisine " rendered="#{article.category != null}" />
+									
+									<h:link rendered="#{article.author != null}"
+											outcome="profile"
+											rel="tooltip"
+											data-toggle="tooltip"
+											title="Profiline git">
+										<f:param name="userId" value="#{article.author.id}" />
+										<b> </b><i class='icon-user'></i> <b> </b>#{article.author.fullName}</h:link>
+									<h:outputText value=" tarafından " rendered="#{article.author != null}" />
+									gönderildi
+								</em>
+					  		</header>
+					  		<!-- /Header -->
+					  		<br />
+							<p><h:outputText value="#{article.content}" escape="false" /></p>
+							<br />
+					    </ui:repeat>
+					    
+					    <!-- Pagination -->
+					    <h:form styleClass="pagination pagination-centered">
+					    	<c:if test="#{empty articleListBackingBean.category}">
+						    	<ul>
+									<li>
+										<h:commandLink value="←" style="color: black;" action="#{articleListBackingBean.paginator.prev}" />
+									</li>
+									<li>
+										<a href="#" style="color: black;">
+											#{articleListBackingBean.paginator.pageIndex} / #{articleListBackingBean.paginator.pages}
+										</a>
+									</li>
+									<li>
+										<h:commandLink value="→" style="color: black;" action="#{articleListBackingBean.paginator.next}" />
+									</li>
+									<h:inputHidden value="#{articleListBackingBean.paginator.pageIndex}" />
+								</ul>
+							</c:if>
+							<c:if test="#{! empty articleListBackingBean.category}">
+						    	<ul>
+									<li>
+										<h:commandLink value="←" style="color: black;" action="#{articleListBackingBean.paginator.prev}">
+											<f:param name="categoryId" value="#{articleListBackingBean.category.id}" />
+										</h:commandLink>
+									</li>
+									<li>
+										<a href="#" style="color: black;">
+											#{articleListBackingBean.paginator.pageIndex} / #{articleListBackingBean.paginator.pages}
+										</a>
+									</li>
+									<li>
+										<h:commandLink value="→" style="color: black;" action="#{articleListBackingBean.paginator.next}">
+											<f:param name="categoryId" value="#{articleListBackingBean.category.id}" />
+										</h:commandLink>
+									</li>
+									<h:inputHidden value="#{articleListBackingBean.paginator.pageIndex}" />
+								</ul>
+							</c:if>
+						</h:form>
+						<!-- /Pagination -->
+						
+				    </c:if>
+				    <c:if test="#{empty articleListBackingBean.articleList}">
+				    	<hr />
+				    	Yok ki...
+				    </c:if>
+				</div><!-- end of span9 -->
+				<div class="span3">
+					<hr />
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-flag"></i> Kategoriler
+					</legend>
+					<c:if test="#{! empty articleListBackingBean.categoryList}">
+						<ul>
+							<ui:repeat value="#{articleListBackingBean.categoryList}" var="category">
+						    	<li>
+							    	<h:link value="#{category.title}" outcome="articleList">
+							    		<f:param name="categoryId" value="#{category.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty articleListBackingBean.categoryList}">
+				    	Yok ki...
+				    </c:if>
+				    <br />
+				    <legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-folder-open"></i> Arşiv
+					</legend>
+				    Yok ki...
+				</div><!-- end of span3 -->
+		    </div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

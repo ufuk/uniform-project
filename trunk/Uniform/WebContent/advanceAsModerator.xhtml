@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Moderatör Atama · Yönetim
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Moderatör Atama</h1>
+	    		<p class="lead">
+	    			'#{advanceAsModeratorBackingBean.user.fullName}' adlı kullanıcıyı 
+	    			aşağıdan seçeceğiniz bir kategoriye yönetici olarak atamak üzeresiniz.
+	    		</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Advance as Moderator Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Moderatör Atama</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kategori" />
+								<div class="controls">
+									<h:selectOneMenu value="#{advanceAsModeratorBackingBean.categoryId}"
+					    							required="true"
+					    							requiredMessage="Lütfen kategoriyi seçiniz">
+					    				<f:selectItem itemLabel="" itemValue="" />
+					    				<f:selectItems value="#{advanceAsModeratorBackingBean.categoryList}"
+					    							var="category"
+					    							itemValue="#{category.id}"
+					    							itemLabel="#{category.title}" />
+					    			</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" style="margin-right: 4px;"
+												value="Ata"
+												action="#{advanceAsModeratorBackingBean.advanceAsModeratorAction}">
+										<f:param name="userId" value="#{advanceAsModeratorBackingBean.user.id}" />
+										<f:ajax execute="@form" render="@all" />
+			    					</h:commandLink>
+		    						<h:link styleClass="btn" value="Vazgeç" outcome="administerUsers" />
+		    					</div>	
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Advance as Moderator Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

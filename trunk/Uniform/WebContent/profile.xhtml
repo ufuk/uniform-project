@@ -1,0 +1,168 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    #{profileBackingBean.user.fullName} · Profil
+		</ui:define>
+		<ui:define name="content">
+			
+			<h:link styleClass="pull-right"
+					value="Profili Düzenle"
+					outcome="modifyProfile"
+					rendered="#{profileBackingBean.isUserOwnerOfThisProfile()}" />
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>#{profileBackingBean.user.fullName}</h1>
+	    		<p class="lead">Profil sayfama hoş geldin. Bu sayfadan hakkımda pek çok şey öğrenebilir ve benimle iletişime geçebilirsin.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+		
+			<div class="row">
+				<div class="span6">
+					<legend>Temel Bilgiler</legend>
+					<dl class="dl-horizontal">
+						<dt>Bölümüm</dt>
+						<c:if test="#{profileBackingBean.user.department != null}">
+							<dd>#{profileBackingBean.user.department.name}</dd>
+						</c:if>
+						<c:if test="#{profileBackingBean.user.department == null}">
+							<dd>-</dd>
+						</c:if>
+						<dt></dt>
+						<dd>#{profileBackingBean.role}</dd>
+						<dt></dt>
+						<dd><br /></dd>
+						<dt>Cinsiyetim</dt>
+						<dd>#{profileBackingBean.sex}</dd>
+						<dt></dt>
+						<dd><br /></dd>
+						<dt>Hakkımda</dt>
+						<dd>#{profileBackingBean.user.about}</dd>
+					</dl>
+				</div>
+				<div class="span6">
+					<legend>İletişim Bilgileri</legend>
+					<dl class="dl-horizontal">
+						<dt>E-posta adresim</dt>
+						<dd>
+							<h:outputLink value="mailto:#{profileBackingBean.user.email}">
+								#{profileBackingBean.user.email}
+							</h:outputLink>
+						</dd>
+						<dt></dt>
+						<dd>
+							<!-- Message Dialog -->
+							<div class="modal hide fade" id="sendMessageDialog">
+								<div class="modal-header">
+									<a href="#" class="close" data-dismiss="modal">x</a>
+									<h3>Mesaj Gönder</h3>
+								</div>
+								<div class="modal-body">
+									<h:form styleClass="form-horizontal">
+										<fieldset>
+											<div class="control-group">
+												<h:outputLabel styleClass="control-label" value="Kime" />
+												<div class="controls">
+													<h:outputText styleClass="control-label"
+																style="text-align: left;"
+																value="#{profileBackingBean.user.fullName}" />
+												</div>
+											</div>
+											<div class="control-group">
+												<h:outputLabel styleClass="control-label" value="Başlık" />
+												<div class="controls">
+													<h:inputText value="#{sendMessageBackingBean.title}"
+								    							required="true"
+								    							requiredMessage="'Başlık' alanı boş bırakılamaz" />
+												</div>
+											</div>
+											<div class="control-group">
+												<h:outputLabel styleClass="control-label" value="Mesajın" />
+												<div class="controls">
+													<h:inputTextarea value="#{sendMessageBackingBean.content}"
+								    							required="true"
+								    							styleClass="input-xlarge"
+								    							requiredMessage="'Mesajın' alanı boş bırakılamaz" />
+												</div>
+											</div>
+											<div class="control-group">
+												<div class="controls">
+													<h:commandLink styleClass="btn btn-primary" value="Gönder" action="#{sendMessageBackingBean.sendMessageAction(profileBackingBean.user)}">
+							    						<f:param name="userId" value="#{profileBackingBean.user.id}"></f:param>
+							    						<f:ajax execute="@form" render="@this" />
+							    					</h:commandLink>
+							    					<a href="#" class="btn" onclick="$('#sendMessageDialog').modal('hide');">Vazgeç</a>
+												</div>
+											</div>
+										</fieldset>
+									</h:form>
+								</div>
+							</div>
+							<!-- /Message Dialog -->
+							
+							<br />
+							<c:if test="#{userBean.isLoggedIn()}">
+								<a data-toggle="modal" href="#sendMessageDialog">Mesaj Gönder</a>
+							</c:if>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			
+			<br />
+			<legend>Diğer</legend>
+			
+			<div class="row">
+				<div class="span6">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-pencil"></i> Makalelerim
+					</legend>
+					<c:if test="#{! empty profileBackingBean.lastArticles}">
+						<ul>
+							<ui:repeat value="#{profileBackingBean.lastArticles}" var="article">
+						    	<li>
+							    	<h:link value="#{article.title}" outcome="articleDetail">
+							    		<f:param name="articleId" value="#{article.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty profileBackingBean.lastArticles}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+				<!-- 
+				<div class="span4">
+					<h4>Yorumladıklarım</h4>
+					Yok ki...
+				</div>
+				 -->
+				<div class="span6">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-ok"></i> Beğendiğim Makaleler
+					</legend>
+					<c:if test="#{! empty profileBackingBean.likedArticles}">
+						<ul>
+							<ui:repeat value="#{profileBackingBean.likedArticles}" var="article">
+						    	<li>
+							    	<h:link value="#{article.title}" outcome="articleDetail">
+							    		<f:param name="articleId" value="#{article.id}" />
+							    	</h:link>
+						    	</li>
+						    </ui:repeat>
+					    </ul>
+				    </c:if>
+				    <c:if test="#{empty profileBackingBean.likedArticles}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</html>

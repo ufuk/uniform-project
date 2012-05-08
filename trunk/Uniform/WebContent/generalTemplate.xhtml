@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:head>
+		<meta charset="utf-8" />
+		<title><ui:insert name="title" /> · Uniform</title>
+		<link rel="shortcut icon" href="resources/img/uniform-favicon.ico"></link>
+		<h:outputStylesheet library="css" name="bootstrap.css" />
+		<h:outputStylesheet library="css" name="bootstrap-responsive.css" />
+		<h:outputStylesheet library="css" name="uniform.css" />
+	</h:head>
+	
+	<h:body>
+		<!-- Navbar -->
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					
+					<h:link styleClass="brand" outcome="mainPage">uniform</h:link>
+
+					<div class="nav-collapse">
+				    	<ul class="nav">
+				    		<li class="divider-vertical"></li>
+							<li class="">
+								<h:link outcome="mainPage">
+									<!-- <i class="icon-home icon-white"></i> --> Ana Sayfa
+								</h:link>
+							</li>
+							<li class=""><h:link outcome="articleList">Makaleler</h:link></li>
+							<li class=""><h:link outcome="newsList">Haberler</h:link></li>
+							<li class=""><h:link outcome="announcementList">Duyurular</h:link></li>
+						</ul>
+		                <ul class="nav pull-right">
+		                	<c:if test="#{! userBean.isLoggedIn()}">
+								<h:link outcome="login" styleClass="btn btn-primary">Giriş</h:link>
+								<li class="divider-vertical"></li>
+								<h:link outcome="register" styleClass="btn btn-danger">Kayıt</h:link>
+							</c:if>
+							<c:if test="#{userBean.isLoggedIn()}">
+								<li class="divider-vertical"></li>
+								<li class="dropdown">
+									<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+										#{userBean.currentUser.fullName} <b class="caret"></b>
+									</a>
+									<ul class="dropdown-menu">
+		                      			<li>
+											<h:link outcome="profile">
+												<i class="icon-user"></i> Profil
+												<f:param name="userId" value="#{userBean.currentUser.id}" />
+											</h:link>
+										</li>
+		                      			<li>
+		                      				<h:link outcome="messages">
+		                      					<c:if test="#{userBean.notReadedMessagesCount == 0}">
+			                      						<i class="icon-envelope"></i> Mesajlar
+		                      					</c:if>
+		                      					<c:if test="#{userBean.notReadedMessagesCount != 0}">
+			                      					<div style="float: left">
+			                      						<i class="icon-envelope"></i> Mesajlar
+			                      					</div>
+			                      					<div style="text-align: right">
+			                      						<span class="label label-inverse">#{userBean.notReadedMessagesCount}</span>
+			                      					</div>
+		                      					</c:if>
+		                      				</h:link>
+		                      			</li>
+		                      			<li class="divider"></li>
+		                      			<li>
+		                      				<h:link outcome="addArticle">
+		                      					<i class="icon-pencil"></i> Yeni Makale Ekle
+		                      				</h:link>
+		                      			</li>
+		                      			<c:if test="#{userBean.isUserSystemAdmin()}">
+			                      			<li>
+		                      					<h:link outcome="addNews">
+		                      						<i class="icon-pencil"></i> Yeni Haber Ekle
+		                      					</h:link>
+		                      				</li>
+		                      				<li>
+		                      					<h:link outcome="addAnnouncement">
+		                      						<i class="icon-pencil"></i> Yeni Duyuru Ekle
+		                      					</h:link>
+		                      				</li>
+	                      				</c:if>
+		                      			<c:if test="#{userBean.isUserModerator() or userBean.isUserSystemAdmin()}">
+		                      				<li class="divider"></li>
+		                      				<li>
+		                      					<h:link outcome="moderateArticles">
+		                      						<i class="icon-cog"></i> Makaleleri Yönet
+		                      					</h:link>
+		                      				</li>
+		                      				<li>
+		                      					<h:link outcome="moderateComments">
+		                      						<i class="icon-cog"></i> Yorumları Yönet
+		                      					</h:link>
+		                      				</li>
+		                      			</c:if>
+		                      			<c:if test="#{userBean.isUserSystemAdmin()}">
+		                      				<li class="divider"></li>
+		                      				<li>
+		                      					<h:link outcome="administerNews">
+		                      						<i class="icon-cog"></i> Haberleri Yönet
+		                      					</h:link>
+		                      				</li>
+		                      				<li>
+		                      					<h:link outcome="administerAnnouncements">
+		                      						<i class="icon-cog"></i> Duyuruları Yönet
+		                      					</h:link>
+		                      				</li>
+		                      				<li>
+		                      					<h:link outcome="administerCategories">
+		                      						<i class="icon-cog"></i> Kategorileri Yönet
+		                      					</h:link>
+		                      				</li>
+		                      				<li>
+		                      					<h:link outcome="administerDepartments">
+		                      						<i class="icon-cog"></i> Bölümleri Yönet
+		                      					</h:link>
+		                      				</li>
+		                      				<li>
+		                      					<h:link outcome="administerUsers">
+		                      						<i class="icon-cog"></i> Kullanıcıları Yönet
+		                      					</h:link>
+		                      				</li>
+		                      				<li class="divider"></li>
+		                      				<li>
+		                      					<h:link outcome="emailSettings">
+		                      						<i class="icon-cog"></i> E-posta Ayarları
+		                      					</h:link>
+		                      				</li>
+		                      			</c:if>
+		                      				<li class="divider"></li>
+		                      			<li>
+		                      				<h:link outcome="logout">
+		                      					<i class="icon-off"></i> Çıkış
+		                      				</h:link>
+		                      			</li>
+		                      			
+		                    		</ul>
+								</li>
+							</c:if>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div><br /><br /><br />
+		<!-- /Navbar -->
+		
+		<!-- Page Content -->
+		<div class="container">
+			<ui:insert name="content" />
+		</div>
+		<!-- /Page Content -->
+		
+		<!-- Footer -->
+		<div class="container">
+			<br />
+			<br />
+			<hr />
+			<footer class="footer">
+				<p class="pull-right"><a href="#">başa dön</a></p>
+				<p><a rel="tooltip" title="ufukuzun.ce@gmail.com" href="mailto:ufukuzun.ce@gmail.com">ufuk uzun</a> tarafından tasarlandı ve geliştirildi</p>
+			</footer>
+			<br />
+		</div>
+		<!-- /Footer -->
+		
+		<!-- for performance reasons, we put js scripts to the bottom of the page -->
+		<h:outputScript library="primefaces" name="jquery/jquery.js"/>
+		<h:outputScript library="js" name="jquery.blockUI.js" />
+		<h:outputScript library="js" name="bootstrap.js" />
+		<h:outputScript library="js" name="uniform.js" />
+	</h:body>
+</html>

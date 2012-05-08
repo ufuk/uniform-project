@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Çevrimiçi Üniversite Dergisi
+		</ui:define>
+		<ui:define name="content">
+			<div class="row">
+				<div class="span12">
+					<br />
+					<div class="hero-unit">
+						<table>
+							<tr>
+								<td><img src="resources/img/tocap.jpg" /></td>
+								<td>
+									<h1>Uniform</h1>
+									<p>"Çevrimiçi Üniversite Dergisi" Uniform'a hoş geldiniz</p>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<p>
+										<h:link styleClass="btn btn-danger btn-large"
+												rendered="#{!userBean.isLoggedIn()}"
+												value="Hemen kayıt ol"
+												outcome="register" />
+									</p>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="span4">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-book"></i> Son eklenen makaleler
+					</legend>
+					<c:if test="#{! empty mainPageBackingBean.lastArticles}">
+						<ul>
+							<ui:repeat value="#{mainPageBackingBean.lastArticles}" var="article">
+						    	<li>
+							    	<h:link value="#{article.title}" outcome="articleDetail">
+							    		<f:param name="articleId" value="#{article.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty mainPageBackingBean.lastArticles}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+				<div class="span4">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-fire"></i> Son eklenen haberler
+					</legend>
+					<c:if test="#{! empty mainPageBackingBean.lastNews}">
+						<ul>
+							<ui:repeat value="#{mainPageBackingBean.lastNews}" var="news">
+						    	<li>
+							    	<h:link value="#{news.title}" outcome="newsDetail">
+							    		<f:param name="newsId" value="#{news.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty mainPageBackingBean.lastNews}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+				<div class="span4">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						<i class="icon-volume-up"></i> Duyurular
+					</legend>
+					<c:if test="#{! empty mainPageBackingBean.lastAnnouncements}">
+						<ul>
+							<ui:repeat value="#{mainPageBackingBean.lastAnnouncements}" var="announcement">
+						    	<li>
+							    	<h:link value="#{announcement.title}" outcome="announcementDetail">
+							    		<f:param name="announcementId" value="#{announcement.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty mainPageBackingBean.lastAnnouncements}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+			</div>			
+		</ui:define>
+	</ui:composition>
+</html>

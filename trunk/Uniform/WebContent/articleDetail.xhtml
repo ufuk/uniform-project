@@ -1,0 +1,229 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{articleDetailBackingBean.likePreRenderViewListener}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    #{articleDetailBackingBean.article.title} · Makale
+		</ui:define>
+		<ui:define name="content">
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>#{articleDetailBackingBean.article.title}</h1>
+	    		<em>
+	    			<i class="icon-calendar"></i> <b> </b>
+	    			<h:outputText value="#{articleDetailBackingBean.article.publishedDate}">
+						<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+					</h:outputText> tarihinde 
+					<c:if test="#{! empty articleDetailBackingBean.article.category}">
+						<h:link outcome="articleList"
+								value="#{articleDetailBackingBean.article.category.title}"
+								rel="tooltip"
+								data-toggle="tooltip"
+								title="Tümünü gör">
+							<f:param name="categoryId" value="#{articleDetailBackingBean.article.category.id}" />
+						</h:link> kategorisine 
+					</c:if>
+					<c:if test="#{! empty articleDetailBackingBean.article.author}">
+						<b> </b> <i class="icon-user"></i> <b> </b>
+						<h:link value="#{articleDetailBackingBean.article.author.fullName}"
+								outcome="profile"
+								rel="tooltip"
+								data-toggle="tooltip"
+								title="Profiline git">
+							<f:param name="userId" value="#{articleDetailBackingBean.article.author.id}" />
+						</h:link> tarafından 
+					</c:if>
+					gönderildi
+	    		</em>
+	  		</header>
+	  		<!-- /Page Header -->
+			
+			<hr />
+			<p>
+				<h:outputText value="#{articleDetailBackingBean.article.content}" escape="false" />
+			</p>
+			
+			<!-- Complain Dialog -->
+			<div class="modal hide fade" id="complainArticleDialog">
+				<div class="modal-header">
+					<a href="#" class="close" data-dismiss="modal">x</a>
+					<h3>Şikayet Et</h3>
+				</div>
+				<div class="modal-body">
+					<h:form styleClass="form-horizontal">
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Açıklamanız" />
+								<div class="controls">
+									<h:inputTextarea value="#{complainArticleBackingBean.explanation}"
+				    							required="true"
+				    							styleClass="input-xlarge"
+				    							requiredMessage="'Açıklama' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls">
+									<h:commandLink styleClass="btn btn-primary" value="Gönder"
+												action="#{complainArticleBackingBean.complainArticleAction(articleDetailBackingBean.article)}">
+										<f:param name="articleId" value="#{articleDetailBackingBean.article.id}" />
+			    						<f:ajax execute="@form" render="@this" />
+			    					</h:commandLink>
+			    					<a href="#" class="btn" onclick="$('#complainArticleDialog').modal('hide');">Vazgeç</a>
+								</div>
+							</div>
+						</fieldset>
+					</h:form>
+				</div>
+			</div>
+			<!-- /Complain Dialog -->
+			
+			<c:if test="#{articleDetailBackingBean.getArticleLikedUsersSize() != 0}">
+				<span class="label">
+					<i class="icon-ok icon-white"></i> <b> </b>
+					<h:outputText value="#{articleDetailBackingBean.getArticleLikedUsersSize()} kişi bu makaleyi beğendi" />
+				</span>
+			</c:if>
+			
+			<h:form rendered="#{userBean.isLoggedIn()}">
+				<br />
+				<div class="submitDiv" style="float: left; padding-right: 4px;">
+					<h:commandLink value="Beğen / Beğenmekten Vazgeç"
+								binding="#{articleDetailBackingBean.likeCommandLink}"
+								rendered="#{userBean.isLoggedIn() and !articleDetailBackingBean.isUserAuthorOfThisArticle()}"
+								action="#{articleDetailBackingBean.likeOrCancelAction}">
+						<f:ajax execute="@form" render="@form" />
+						<f:param name="articleId" value="#{articleDetailBackingBean.article.id}" />
+					</h:commandLink>
+				</div>
+					<h:outputText value=" · " rendered="#{userBean.isLoggedIn() and !articleDetailBackingBean.isUserAuthorOfThisArticle()}" />
+					<c:if test="#{userBean.isLoggedIn() and !articleDetailBackingBean.isUserAuthorOfThisArticle()}">
+						<a data-toggle="modal" href="#complainArticleDialog">Şikayet Et</a>
+					</c:if>
+					<h:outputText value=" · " rendered="#{!userBean.isLoggedIn() and !articleDetailBackingBean.isUserAuthorOfThisArticle()}" />
+				<div class="submitDiv">
+					<h:link value="Düzenle"
+							outcome="modifyArticle"
+							rendered="#{articleDetailBackingBean.isUserAuthorOfThisArticle()}">
+						<f:param name="articleId" value="#{articleDetailBackingBean.article.id}" />
+					</h:link>
+					<h:outputText value=" · " rendered="#{articleDetailBackingBean.isUserAuthorOfThisArticle()}" />
+					<h:commandLink value="Sil"
+								rendered="#{articleDetailBackingBean.isUserAuthorOfThisArticle()}"
+								action="#{articleDetailBackingBean.deleteArticleAction()}">
+						<f:param name="articleId" value="#{articleDetailBackingBean.article.id}" />
+					</h:commandLink>
+				</div>
+			</h:form>
+			
+			<!-- Comment Form -->
+			<h:form styleClass="form-horizontal">
+				<legend>Yorum Ekle</legend>
+				<fieldset>
+					<c:if test="#{!userBean.isLoggedIn()}">
+					<div class="control-group">
+						<h:outputLabel styleClass="control-label" value="Adınız" />
+						<div class="controls">
+							<h:inputText value="#{articleDetailBackingBean.visitorName}"
+				    					required="true"
+				    					requiredMessage="'Ad' alanı boş bırakılamaz" />
+						</div>
+					</div>
+					<div class="control-group">
+						<h:outputLabel styleClass="control-label" value="E-posta adresiniz" />
+						<div class="controls">
+							<h:inputText value="#{articleDetailBackingBean.visitorEmail}"
+				    					required="true"
+				    					requiredMessage="'E-posta' alanı boş bırakılamaz"
+				    					validatorMessage="Lütfen geçerli bir e-posta adresi giriniz">
+	   							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+	   						</h:inputText>
+						</div>
+					</div>
+   					</c:if>
+					<div class="control-group">
+						<h:outputLabel styleClass="control-label" value="Yorumunuz" />
+						<div class="controls">
+							<h:inputTextarea value="#{articleDetailBackingBean.commentContent}"
+			    							required="true"
+			    							styleClass="input-xlarge"			    							
+											requiredMessage="'Yorum' alanı boş bırakılamaz" />
+						</div>
+					</div>
+					<div class="form-actions">
+						<c:if test="#{! empty facesContext.messageList}">
+							<div class="alert alert-error">
+								<a class="close" data-dismiss="alert">×</a>
+								<strong>Hay aksi!</strong>
+								<h:messages />
+							</div>
+						</c:if>
+						<div class="submitDiv">
+	    					<h:commandLink styleClass="btn btn-primary" value="Gönder"
+	    								action="#{articleDetailBackingBean.addCommentAction}">
+					    		<f:param name="articleId" value="#{articleDetailBackingBean.article.id}" />
+								<f:ajax execute="@form" render="@all" />												
+							</h:commandLink>
+					    </div>
+					</div>
+				</fieldset>
+			</h:form>
+			<!-- /Comment Form -->
+			
+			<br />
+			
+			<legend>Yorumlar</legend>
+			<h:outputText value="Yok ki..."
+						rendered="#{empty articleDetailBackingBean.commentList}" />
+			<ui:repeat value="#{articleDetailBackingBean.commentList}" var="comment">
+				<div class="well">
+					<em>
+						<i class="icon-calendar"></i> <b> </b>
+						<h:outputText value="#{comment.publishedDate}">
+							<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+						</h:outputText> tarihinde 
+						<b> </b><i class="icon-user"></i> <b> </b>
+						<h:link value="#{comment.author.fullName}"
+								rendered="#{!comment.writtenByVisitor}"
+								outcome="profile"
+								rel="tooltip"
+								data-toggle="tooltip"
+								title="Profiline git">
+							<f:param name="userId" value="#{comment.author.id}" />
+						</h:link>
+						<h:outputLink value="mailto:#{comment.visitorEmail}"
+									rel="tooltip"
+									data-toggle="tooltip"
+									title="#{comment.visitorEmail}"
+									rendered="#{comment.writtenByVisitor}">
+							#{comment.visitorName}</h:outputLink> tarafından gönderildi
+					</em>
+					
+					<p><br /><h:outputText value="#{comment.content}" /></p>					
+					
+					<h:form style="padding: 0px; margin: 0px;"
+							rendered="#{articleDetailBackingBean.isUserAuthorOfThisComment(comment)}">
+						<div class="submitDiv">
+							<h:link value="Düzenle"
+									outcome="modifyComment">
+								<f:param name="commentId" value="#{comment.id}" />
+							</h:link>
+							 · 
+							<h:commandLink value="Sil"
+										action="#{articleDetailBackingBean.deleteCommentAction(comment)}">
+								<f:param name="articleId" value="#{articleDetailBackingBean.article.id}" />
+							</h:commandLink>
+						</div>
+					</h:form>
+				</div>
+			</ui:repeat>
+		</ui:define>
+	</ui:composition>
+</html>

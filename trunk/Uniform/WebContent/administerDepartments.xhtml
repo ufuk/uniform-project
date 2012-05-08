@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Bölümler · Yönetim
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Bölümler</h1>
+	    		<p class="lead">Buradan bölümleri düzenleyebilir ve yeni bölümler ekleyebilirsiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Add Department Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Yeni Bölüm</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Bölümün Adı" />
+								<div class="controls">
+									<h:inputText value="#{administerDepartmentsBackingBean.name}"
+						    					required="true"
+						    					requiredMessage="'Bölümün Adı' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" value="Ekle" 
+												action="#{administerDepartmentsBackingBean.addDepartmentAction}">
+										<f:ajax execute="@form" render="@all" />												
+									</h:commandLink>
+								</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Add Department Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+	  		
+	  		<br />
+	  		
+	  		<legend>Tüm Bölümler</legend>
+	  		<h:outputText value="Yok ki..." rendered="#{empty administerDepartmentsBackingBean.departmentList}" />
+			<h:dataTable styleClass="table"
+						value="#{administerDepartmentsBackingBean.departmentList}"
+						var="department"
+						rendered="#{! empty administerDepartmentsBackingBean.departmentList}">
+				<h:column>
+					<f:facet name="header">Bölümün Adı</f:facet>
+					#{department.name}
+				</h:column>
+				<h:column>
+					<div class="submitDiv">
+						<h:link value="Düzenle" outcome="modifyDepartment">
+							<f:param name="departmentId" value="#{department.id}" />
+						</h:link>
+					</div>
+				</h:column>
+				<h:column>
+					<h:form style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Sil"
+										action="#{administerDepartmentsBackingBean.deleteAction(department)}" />
+						</div>
+					</h:form>
+				</h:column>
+			</h:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

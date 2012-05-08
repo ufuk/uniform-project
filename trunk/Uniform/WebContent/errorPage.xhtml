@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Hata!
+		</ui:define>
+		<ui:define name="content">
+			<div class="row">
+				<div class="span12">
+					<br />
+					<div class="hero-unit">
+						<h1>Hata!</h1>
+						<p>
+							Yaptığınız işlemlerin doğruluğundan eminseniz tekrar lütfen deneyin. 
+							Hatanın tekrarlaması halinde ise hatayı sistem yöneticilerine raporlayabilirsiniz.
+						</p>
+						<p>
+							<a class="btn btn-danger btn-large">Hatayı raporla</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</html>
