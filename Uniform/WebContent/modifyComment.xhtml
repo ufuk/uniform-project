@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotLoggedIn}" />
+		<f:event type="preRenderView" listener="#{modifyCommentBackingBean.init}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Yorum Düzenleme
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Yorum Düzenleme</h1>
+	    		<p class="lead">
+	    			'#{modifyCommentBackingBean.comment.article.title}' başlıklı makaleye yaptığınız 
+	    			<h:outputText value="#{modifyCommentBackingBean.comment.publishedDate}">
+						<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy hh:mm" />
+					</h:outputText> tarihli yorumunuzu düzenlemek üzeresiniz.
+	    		</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Modify Comment Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Yorum Düzenleme</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Yorumunuz" />
+								<div class="controls">
+									<h:inputTextarea value="#{modifyCommentBackingBean.content}"
+						    						required="true"
+						    						requiredMessage="'Yorumunuz' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" style="margin-right: 4px;" value="Kaydet"
+												action="#{modifyCommentBackingBean.modifyAction}">
+										<f:ajax execute="@form" render="@all" />
+										<f:param name="commentId" value="#{modifyCommentBackingBean.comment.id}" />
+			    					</h:commandLink>
+			    					<h:link styleClass="btn" value="Vazgeç" outcome="articleDetail">
+							    		<f:param name="articleId" value="#{modifyCommentBackingBean.comment.article.id}" />
+							    	</h:link>
+							    </div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Modify Comment Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

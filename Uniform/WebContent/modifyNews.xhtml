@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+		<f:event type="preRenderView" listener="#{modifyNewsBackingBean.init}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+			#{modifyNewsBackingBean.news.title} · Haber Düzenleme
+		</ui:define>
+		<ui:define name="content">
+		    
+		    <!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Haber Düzenleme</h1>
+	    		<p class="lead">'#{modifyNewsBackingBean.news.title}' başlıklı haberi düzenlemek üzeresiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Modify News Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Haber Düzenleme</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Başlık" />
+								<div class="controls">
+									<h:inputText value="#{modifyNewsBackingBean.title}"
+						    					required="true"
+						    					requiredMessage="'Başlık' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="İçerik" />
+								<div class="controls">
+						    		<p:editor value="#{modifyNewsBackingBean.content}"
+						    				required="true"
+						    				requiredMessage="'İçerik' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" style="margin-right: 4px;" value="Kaydet"
+												action="#{modifyNewsBackingBean.modifyAction}">
+										<f:ajax execute="@form" render="@all" />
+										<f:param name="newsId" value="#{modifyNewsBackingBean.news.id}" />
+			    					</h:commandLink>
+			    					<h:link styleClass="btn" value="Vazgeç" outcome="newsDetail">
+			    						<f:param name="newsId" value="#{modifyNewsBackingBean.news.id}" />
+			    					</h:link>
+			    				</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Modify News Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

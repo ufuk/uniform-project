@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Duyurular · Yönetim
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Duyurular</h1>
+	    		<p class="lead">Buradan duyuruları düzenleyebilir ve silebilirsiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<legend>Tüm Duyurular</legend>
+	  		<h:outputText value="Yok ki..." rendered="#{empty administerAnnouncementsBackingBean.announcementList}" />
+			<h:dataTable styleClass="table"
+						value="#{administerAnnouncementsBackingBean.announcementList}"
+						var="announcement"
+						rendered="#{! empty administerAnnouncementsBackingBean.announcementList}">
+				<h:column>
+					<f:facet name="header">Duyuru</f:facet>
+					<h:link value="#{announcement.title}" outcome="announcementDetail">
+						<f:param name="announcementId" value="#{announcement.id}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<div class="submitDiv">
+						<h:link value="Düzenle" outcome="modifyAnnouncement">
+							<f:param name="announcementId" value="#{announcement.id}" />
+						</h:link>
+					</div>
+				</h:column>
+				<h:column>
+					<h:form style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Sil"
+										action="#{administerAnnouncementsBackingBean.deleteAction(announcement)}" />
+						</div>
+					</h:form>
+				</h:column>
+			</h:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

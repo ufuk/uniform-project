@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+		<f:event type="preRenderView" listener="#{modifyCategoryBackingBean.init}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    #{modifyCategoryBackingBean.category.title} · Kategori Düzenleme
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Kategori Düzenleme</h1>
+	    		<p class="lead">'#{modifyCategoryBackingBean.category.title}' başlıklı kategoriyi düzenlemek üzeresiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Modify Category Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Kategori Düzenleme</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kategori Başlığı" />
+								<div class="controls">
+									<h:inputText value="#{modifyCategoryBackingBean.title}"
+						    					required="true"
+						    					requiredMessage="'Kategori Başlığı' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" style="margin-right: 4px;" value="Kaydet"
+												action="#{modifyCategoryBackingBean.modifyAction}">
+										<f:ajax execute="@form" render="@all" />
+										<f:param name="categoryId" value="#{modifyCategoryBackingBean.category.id}" />
+			    					</h:commandLink>
+			    					<h:link styleClass="btn" value="Vazgeç" outcome="administerCategories" />
+			    				</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Modify Category Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,111 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Kategoriler · Yönetim
+		</ui:define>
+		<ui:define name="content">
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Kategoriler</h1>
+	    		<p class="lead">Buradan kategorileri düzenleyebilir, kategorilere yönetici atayabilir ve yeni kategoriler ekleyebilirsiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<div class="row">
+				<div class="span12">
+					<!-- Add Category Form -->
+					<h:form styleClass="form-horizontal">
+					<legend>Yeni Kategori</legend>
+						<fieldset>
+							<div class="control-group">
+								<h:outputLabel styleClass="control-label" value="Kategori Başlığı" />
+								<div class="controls">
+									<h:inputText value="#{administerCategoriesBackingBean.title}"
+						    					required="true"
+						    					requiredMessage="'Kategori Başlığı' alanı boş bırakılamaz" />
+								</div>
+							</div>
+							<div class="form-actions">
+								<c:if test="#{! empty facesContext.messageList}">
+									<div class="alert alert-error">
+										<a class="close" data-dismiss="alert">×</a>
+										<strong>Hay aksi!</strong>
+										<h:messages />
+									</div>
+								</c:if>
+								<div class="submitDiv">
+									<h:commandLink styleClass="btn btn-primary" value="Ekle"
+												action="#{administerCategoriesBackingBean.addCategoryAction}">
+										<f:ajax execute="@form" render="@all" />												
+									</h:commandLink>
+		    					</div>
+							</div>
+						</fieldset>
+					</h:form>
+					<!-- /Add Category Form -->
+				</div><!-- end of span12 -->
+			</div><!-- end of row -->
+	  		
+	  		<br />
+	  		
+	  		<legend>Tüm Kategoriler</legend>
+	  		<h:outputText value="Yok ki..." rendered="#{empty administerCategoriesBackingBean.categoryList}" />
+			<h:dataTable styleClass="table"
+						value="#{administerCategoriesBackingBean.categoryList}"
+						var="category"
+						rendered="#{! empty administerCategoriesBackingBean.categoryList}">
+				<h:column>
+					<f:facet name="header">Kategori Başlığı</f:facet>
+					#{category.title}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Yönetici</f:facet>
+					<h:outputText value="Yönetici atanmamış"
+								rendered="#{category.moderator == null}" />					
+					<h:form rendered="#{category.moderator != null}"
+							style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:link value="#{category.moderator.fullName}"
+									outcome="profile"
+									rel="tooltip"
+									data-toggle="tooltip"
+									title="Profiline git">
+								<f:param name="userId" value="#{category.moderator.id}" />
+							</h:link> · 
+							<h:commandLink value="(Görevden Al)" action="#{administerCategoriesBackingBean.dismissAction(category)}">
+								<f:param name="categoryId" value="#{category.id}" />
+								<f:ajax execute="@form" render="@all" />
+							</h:commandLink>
+						</div>
+					</h:form>
+				</h:column>
+				<h:column>
+					<div class="submitDiv">
+						<h:link value="Düzenle" outcome="modifyCategory">
+							<f:param name="categoryId" value="#{category.id}" />
+						</h:link>
+					</div>
+				</h:column>
+				<h:column>
+					<h:form style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Sil" action="#{administerCategoriesBackingBean.deleteAction(category)}">
+								<f:ajax execute="@form" render="@all" />
+							</h:commandLink>
+						</div>
+					</h:form>
+				</h:column>
+			</h:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

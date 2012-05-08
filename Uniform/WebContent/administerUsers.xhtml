@@ -1,0 +1,127 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Kullanıcılar · Yönetim
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Kullanıcılar</h1>
+	    		<p class="lead">Buradan kullanıcıların üyeliğini aktif/pasif yapabilir, onları yönetici olarak atayabilir ya da görevden alabilirsiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+
+			<legend>Tüm Kullanıcılar</legend>
+			<h:dataTable styleClass="table" 
+						value="#{administerUsersBackingBean.userList}" 
+						var="user"
+						rendered="#{! empty administerUsersBackingBean.userList}">
+				<h:column>
+					<f:facet name="header">Kullanıcı</f:facet>
+					<div class="submitDiv">
+						<h:link value="#{user.fullName}"
+			    				outcome="profile"
+			    				rel="tooltip"
+								data-toggle="tooltip"
+								title="Profiline git">
+			    			<f:param name="userId" value="#{user.id}" />
+			    		</h:link>
+			    	</div>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Görevlendirme</f:facet>
+					<h:outputLabel rendered="#{user.isModerator()}">
+						Halihazırda #{administerUsersBackingBean.getModeratingCount(user)} 
+						kategoriye yönetici olarak atanmış
+					</h:outputLabel>
+					<div class="submitDiv">
+						<h:link value="Moderatör Olarak Ata"
+								rendered="#{!user.isSystemAdmin()}"
+			    				outcome="advanceAsModerator">
+			    			<f:param name="userId" value="#{user.id}" />
+			    		</h:link>
+			    	</div>
+		    		<h:form style="padding: 0px; margin: 0px;">
+			    		<div class="submitDiv">
+			    			<h:outputText value="Sistem Yöneticisi" rendered="#{user.isSystemAdmin()}" />
+			    			<h:outputText value="sin"
+			    					rendered="#{user.isSystemAdmin() and user.id == userBean.currentUser.id}" />
+			    			<h:outputText value=" · "
+			    					rendered="#{user.isSystemAdmin() and user.id != userBean.currentUser.id}" />
+		    			
+			    			<h:commandLink value="Sistem Yöneticisi Olarak Ata"
+			    						rendered="#{!user.isSystemAdmin()}"
+			    						action="#{administerUsersBackingBean.advanceAsSystemAdminAction(user)}">
+	    						<f:ajax execute="@form" render="@all" />
+	   						</h:commandLink>
+			    			<h:commandLink value="(Görevden Al)"
+			    						rendered="#{user.isSystemAdmin() and user.id != userBean.currentUser.id}"
+			    						action="#{administerUsersBackingBean.dismissAction(user)}">
+	   							<f:ajax execute="@form" render="@all" />
+	   						</h:commandLink>
+	   					</div>
+		    		</h:form>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Üyelik</f:facet>
+					<h:form style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Aktifleştir"
+			    						rendered="#{!user.active and user.id != userBean.currentUser.id}"
+			    						action="#{administerUsersBackingBean.activeUserAction(user)}">
+	    						<f:ajax execute="@form" render="@all" />
+	   						</h:commandLink>
+	   						<h:commandLink value="Pasifleştir"
+			    						rendered="#{user.active and user.id != userBean.currentUser.id}"
+			    						action="#{administerUsersBackingBean.deactiveUserAction(user)}">
+	    						<f:ajax execute="@form" render="@all" />
+	   						</h:commandLink>
+	   					</div>
+					</h:form>
+				</h:column>
+				<h:column>
+					<h:form style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Sil"
+			    						rendered="#{user.id != userBean.currentUser.id}"
+			    						action="#{administerUsersBackingBean.deleteUserAction(user)}" />
+			    		</div>
+					</h:form>
+				</h:column>
+			</h:dataTable>
+			
+			<!-- Email failure pop up message -->
+			<div class="modal hide" id="emailFailureDialog">
+				<div class="modal-header">
+					<a href="#" class="close" data-dismiss="modal">x</a>
+					<h3>Hay aksi!</h3>
+				</div>
+				<div class="modal-body">
+					Bilgilendirme e-postası gönderilemedi!
+				</div>
+				<div class="modal-footer">
+					<h:link outcome="administerUsers" styleClass="btn" value="Tamam" />
+				    <h:link outcome="emailSettings" styleClass="btn btn-primary" value="E-posta ayarlarına git" />
+			  	</div>
+			</div>
+			
+			<c:if test="#{! empty facesContext.messageList}">
+				<script type="text/javascript">
+					$('#emailFailureDialog').modal('show');
+				</script>
+			</c:if>
+			<!-- Email failure pop up message -->
+			
+		</ui:define>
+	</ui:composition>
+</html>

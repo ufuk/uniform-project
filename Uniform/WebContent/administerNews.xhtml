@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userBean.navigateToMainIfNotSystemAdmin}" />
+	</f:metadata>
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Haberler · Yönetim
+		</ui:define>
+		<ui:define name="content">
+			
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Haberler</h1>
+	    		<p class="lead">Buradan haberleri düzenleyebilir ve silebilirsiniz.</p>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<legend>Tüm Haberler</legend>
+	  		<h:outputText value="Yok ki..." rendered="#{empty administerNewsBackingBean.newsList}" />
+			<h:dataTable styleClass="table"
+						value="#{administerNewsBackingBean.newsList}"
+						var="news"
+						rendered="#{! empty administerNewsBackingBean.newsList}">
+				<h:column>
+					<f:facet name="header">Haber</f:facet>
+					<h:link value="#{news.title}" outcome="newsDetail">
+						<f:param name="newsId" value="#{news.id}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<div class="submitDiv">
+						<h:link value="Düzenle" outcome="modifyNews">
+							<f:param name="newsId" value="#{news.id}" />
+						</h:link>
+					</div>
+				</h:column>
+				<h:column>
+					<h:form style="padding: 0px; margin: 0px;">
+						<div class="submitDiv">
+							<h:commandLink value="Sil"
+										action="#{administerNewsBackingBean.deleteAction(news)}" />
+						</div>
+					</h:form>
+				</h:column>
+			</h:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

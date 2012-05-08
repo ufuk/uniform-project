@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{readMessageBackingBean.navigateToMainIfNotReceiverOrSender}" />
+	</f:metadata>
+
+	<ui:composition template="messagingTemplate.xhtml">
+		<ui:define name="messagingTitle">
+			Mesaj Oku · Mesajlar
+		</ui:define>
+		<ui:define name="messagingContent">
+			
+			<legend>#{readMessageBackingBean.message.title}
+			<h:form styleClass="submitDiv pull-right" style="padding: 0px; margin: 0px;">
+				<h:commandLink style="font-size: 13px" value="Arşivle" action="#{readMessageBackingBean.moveToArchiveAction}">
+					<f:ajax execute="@form" render="@all" />
+					<f:param name="messageId" value="#{readMessageBackingBean.message.id}" />
+				</h:commandLink>
+			</h:form>
+			</legend>
+			
+			<div class="well">
+				<em>
+					<i class="icon-calendar"></i> <b> </b>
+					<h:outputText value="#{readMessageBackingBean.message.sentDate}">
+						<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+					</h:outputText> tarihinde 
+					<c:if test="#{readMessageBackingBean.message.sender.id != userBean.currentUser.id}">
+						<b> </b><i class="icon-user"></i> <b> </b>
+						<h:link value="#{readMessageBackingBean.message.sender.fullName}"
+								rendered="#{readMessageBackingBean.message.sender.id != userBean.currentUser.id}"
+								outcome="profile"
+								rel="tooltip"
+								data-toggle="tooltip"
+								title="Profiline git">
+							<f:param name="userId" value="#{readMessageBackingBean.message.sender.id}" />
+						</h:link>
+					</c:if>
+					<c:if test="#{readMessageBackingBean.message.sender.id == userBean.currentUser.id}">
+						senin
+					</c:if> tarafından gönderildi
+				</em>
+				<p><br /><h:outputText value="#{readMessageBackingBean.message.content}" escape="false" /></p>
+			</div>
+			
+			<ui:repeat value="#{readMessageBackingBean.replies}" var="reply">
+				<div class="well">
+					<em>
+						<i class="icon-calendar"></i> <b> </b>
+						<h:outputText value="#{reply.sentDate}">
+							<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+						</h:outputText> tarihinde 
+						<h:outputText rendered="#{reply.writter.id != userBean.currentUser.id}">
+							<b> </b><i class="icon-user"></i> <b> </b>
+						</h:outputText>
+						<h:link outcome="profile"
+								rel="tooltip"
+								data-toggle="tooltip"
+								title="Profiline git"
+								rendered="#{reply.writter.id != userBean.currentUser.id}">
+								<b> </b><i class="icon-user"></i> <b> </b> #{reply.writter.fullName}
+							<f:param name="userId" value="#{reply.writter.id}" />
+						</h:link>
+						<h:outputText value="senin"
+									rendered="#{reply.writter.id == userBean.currentUser.id}" /> tarafından gönderildi
+					</em>
+					<p><br /><h:outputText value="#{reply.content}" escape="false" /></p>
+				</div>
+			</ui:repeat>
+			
+			<!-- Reply Form -->
+			<h:form>
+				<div class="submitDiv">
+					<h:inputTextarea value="#{readMessageBackingBean.replyContent}"
+		   							required="true"
+		   							styleClass="input-xlarge"			    							
+									requiredMessage="'Yanıtınız' alanı boş bırakılamaz" />
+					<h:commandLink styleClass="btn btn-primary" style="margin-left: 4px;" value="Yanıtla"
+								action="#{readMessageBackingBean.replyAction}">
+						<f:ajax execute="@form" render="@all" />
+			    		<f:param name="messageId" value="#{readMessageBackingBean.message.id}" />
+			    	</h:commandLink>
+			    </div>
+			</h:form>
+			<!-- /Reply Form -->
+		</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    <ui:insert name="messagingTitle" />
+		</ui:define>
+		<ui:define name="content">
+			<div class="row">
+				
+				<div class="span12">
+					<!-- Page Header -->
+					<header class="jumbotron subhead">
+			    		<h1>Mesajlar</h1>
+			    		<p class="lead">Buradan site içi mesajlaşmalarınıza ulaşabilirsiniz.</p>
+			  		</header>
+			  		<!-- /Page Header -->
+		  		</div>
+		  		
+				<div class="span2">
+					<ul class="nav nav-list" style="padding: 0px;">
+						<li>
+							<h3 style="line-height: 36px; font-size: 19.5px; font-weight: normal;">
+								Menü
+							</h3>
+						</li>
+						<li>
+							<h:link outcome="messages">
+								<i class="icon-envelope"></i> Mesajlar
+								<f:param name="type" value="ACTIVE" />
+							</h:link>
+						</li>
+						<li>
+							<h:link outcome="messages">
+								<i class="icon-folder-open"></i> Arşiv
+								<f:param name="type" value="ARCHIVE" />
+							</h:link>
+						</li>
+					</ul>
+				</div><!-- end of span2 -->
+				
+				<div class="span10">
+					<ui:insert name="messagingContent" />
+				</div><!-- end of span10 -->
+			</div><!-- end of row -->
+		</ui:define>
+	</ui:composition>
+</html>

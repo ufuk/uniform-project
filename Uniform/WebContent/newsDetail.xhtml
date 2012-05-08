@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    #{newsDetailBackingBean.news.title} · Haber
+		</ui:define>
+		<ui:define name="content">
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>#{newsDetailBackingBean.news.title}</h1>
+	    		<em>
+	    			<i class="icon-calendar"></i> <b> </b>
+	    			<h:outputText value="#{newsDetailBackingBean.news.publishedDate}">
+						<f:convertDateTime type="date" timeStyle="short" pattern="dd.MM.yyyy" />
+					</h:outputText> tarihinde gönderildi
+	    		</em>
+	  		</header>
+	  		<!-- /Page Header -->
+	  		
+	  		<hr />
+			<p>
+				<h:outputText value="#{newsDetailBackingBean.news.content}" escape="false" />
+			</p>
+			
+			<h:form rendered="#{userBean.isUserSystemAdmin()}">
+				<div class="submitDiv">
+					<h:link value="Düzenle"
+							outcome="modifyNews">
+				    	<f:param name="newsId" value="#{newsDetailBackingBean.news.id}" />
+				    </h:link> · 
+				    <h:commandLink value="Sil" 
+				    			action="#{newsDetailBackingBean.deleteAction}">
+				    	<f:param name="newsId" value="#{newsDetailBackingBean.news.id}" />
+				    </h:commandLink>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>
