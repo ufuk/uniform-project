@@ -15,23 +15,28 @@
 					<div class="hero-unit">
 						<table>
 							<tr>
-								<td><img src="resources/img/tocap.jpg" /></td>
+								<td style="padding-right: 10px;"><img src="resources/img/tocap.jpg" /></td>
 								<td>
 									<h1>Uniform</h1>
 									<p>"Çevrimiçi Üniversite Dergisi" Uniform'a hoş geldiniz</p>
 								</td>
 							</tr>
-							<tr>
-								<td></td>
-								<td>
-									<p>
-										<h:link styleClass="btn btn-danger btn-large"
-												rendered="#{!userBean.isLoggedIn()}"
-												value="Hemen kayıt ol"
-												outcome="register" />
-									</p>
-								</td>
-							</tr>
+							<c:if test="#{!userBean.isLoggedIn()}">
+								<tr>
+									<td></td>
+									<td>
+										<p>
+											<h:link styleClass="btn btn-primary"
+													style="margin-right: 4px"
+													value="Giriş yap"
+													outcome="login" />
+											<h:link styleClass="btn btn-danger"
+													value="Hemen kayıt ol"
+													outcome="register" />
+										</p>
+									</td>
+								</tr>
+							</c:if>
 						</table>
 					</div>
 				</div>
