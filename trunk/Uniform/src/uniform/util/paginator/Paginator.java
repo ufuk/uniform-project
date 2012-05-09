@@ -62,6 +62,13 @@ public class Paginator {
 
 		updateModel();
 	}
+	
+	public Boolean hasNext() {
+		if (this.pageIndex < pages) {
+			return true;
+		}
+		return false;
+	}
 
 	public void prev() {
 		if (this.pageIndex > 1) {
@@ -69,6 +76,13 @@ public class Paginator {
 		}
 
 		updateModel();
+	}
+	
+	public Boolean hasPrev() {
+		if (this.pageIndex > 1) {
+			return true;
+		}
+		return false;
 	}
 
 	public int getRecords() {

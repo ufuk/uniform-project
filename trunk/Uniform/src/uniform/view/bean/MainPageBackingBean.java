@@ -23,7 +23,6 @@ public class MainPageBackingBean extends AbstractBackingBean {
 	
 	public MainPageBackingBean() {
 		ArticleBO articleBO = new ArticleBO();
-		articleBO.getDateListForArchive();
 		lastArticles = articleBO.getAllAndPaginate(0, 5);
 		
 		NewsBO newsBO = new NewsBO();
