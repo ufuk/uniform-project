@@ -1,5 +1,7 @@
 package uniform.bo;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -111,15 +113,32 @@ public class ArticleBO {
 		articleDAO.saveOrUpdate(article);
 	}
 	
-	public List<Date> getDateListForArchive() {
-		Date firstArticlesPublishedDate = articleDAO.getFirstArticlesPublishedDate();
-		Date lastArticlesPublishedDate = articleDAO.getLastArticlesPublishedDate();		
+	public List<String> getMonthsAsStringListForArchive() {
+		Date firstsPublishedDate = articleDAO.getFirstsPublishedDate();
+		Date lastsPublishedDate = articleDAO.getLastsPublishedDate();
 		
-		for (Date date : Dater.getMonthListBetweenDates(firstArticlesPublishedDate, lastArticlesPublishedDate)) {
-			System.out.println(date);
+		List<String> months = new ArrayList<String>();
+		
+		for (Date date : Dater.getMonthListBetweenDates(firstsPublishedDate, lastsPublishedDate)) {
+			months.add(Dater.monthInTurkish(date) + " " + Dater.partOfDate(Calendar.YEAR, date));
 		}
 		
-		return null;
+		return months;
+	}
+	
+	public List<Date> getMonthsAsDateListForArchive() {
+		Date firstsPublishedDate = articleDAO.getFirstsPublishedDate();
+		Date lastsPublishedDate = articleDAO.getLastsPublishedDate();
+		
+		return Dater.getMonthListBetweenDates(firstsPublishedDate, lastsPublishedDate);
+	}
+	
+	public List<Article> getAllBetweenDates(Date starting, Date ending) {
+		return articleDAO.getAllBetweenDates(starting, ending);
+	}
+
+	public Long getCountBetweenDates(Date starting, Date ending) {
+		return articleDAO.getCountBetweenDates(starting, ending);
 	}
 	
 }

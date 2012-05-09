@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import uniform.entity.Article;
@@ -222,7 +223,7 @@ public class ArticleDAO extends AbstractDAO {
 		return articles;
 	}
 	
-	public Date getLastArticlesPublishedDate() {
+	public Date getLastsPublishedDate() {
 		session = getCurrentSession();
 		session.beginTransaction();
 		Article article = (Article) session.createCriteria(Article.class)
@@ -237,7 +238,7 @@ public class ArticleDAO extends AbstractDAO {
 		return article.getPublishedDate();
 	}
 	
-	public Date getFirstArticlesPublishedDate() {
+	public Date getFirstsPublishedDate() {
 		session = getCurrentSession();
 		session.beginTransaction();
 		Article article = (Article) session.createCriteria(Article.class)
@@ -250,6 +251,34 @@ public class ArticleDAO extends AbstractDAO {
 			return null;
 		}
 		return article.getPublishedDate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Article> getAllBetweenDates(Date starting, Date ending) {
+		session = getCurrentSession();
+		session.beginTransaction();
+		Criteria criteria = session.createCriteria(Article.class)
+								.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
+								.add(Restrictions.eq("deleted", false))
+								.add(Restrictions.ge("publishedDate", starting))
+								.add(Restrictions.le("publishedDate", ending))
+								.addOrder(Order.desc("publishedDate"));
+		List<Article> articles = (ArrayList<Article>) criteria.list();
+		session.getTransaction().commit();
+		return articles;
+	}
+
+	public Long getCountBetweenDates(Date starting, Date ending) {
+		session = getCurrentSession();
+		session.beginTransaction();
+		Criteria criteria = session.createCriteria(Article.class)
+								.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
+								.add(Restrictions.eq("deleted", false))
+								.add(Restrictions.ge("publishedDate", starting))
+								.add(Restrictions.le("publishedDate", ending));
+		Long count = (Long) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		session.getTransaction().commit();
+		return count;
 	}
 	
 }

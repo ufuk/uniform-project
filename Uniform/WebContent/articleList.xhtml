@@ -6,11 +6,14 @@
 
 	<ui:composition template="generalTemplate.xhtml">
 		<ui:define name="title">
-		    <c:if test="#{empty articleListBackingBean.category}">
+		    <c:if test="#{(! articleListBackingBean.archived) and (empty articleListBackingBean.category)}">
 	    		Makaleler
     		</c:if>
     		<c:if test="#{! empty articleListBackingBean.category}">
     			#{articleListBackingBean.category.title} · Makaleler
+    		</c:if>
+    		<c:if test="#{articleListBackingBean.archived}">
+    			#{articleListBackingBean.currentArchive} · Makaleler
     		</c:if>
 		</ui:define>
 		<ui:define name="content">
@@ -18,20 +21,24 @@
 			<!-- Page Header -->
 			<header class="jumbotron subhead">
 	    		<h1>Makaleler</h1>
-	    		<c:if test="#{empty articleListBackingBean.category}">
-	    			<p class="lead">Yayınlanmakta olan tüm makalelere buradan ulaşabilirsiniz.</p>
+	    		<c:if test="#{(! articleListBackingBean.archived) and (empty articleListBackingBean.category)}">
+	    			<p class="lead">Yayınlanmakta olan tüm makaleler</p>
 	    		</c:if>
 	    		<c:if test="#{! empty articleListBackingBean.category}">
-	    			<p class="lead">"#{articleListBackingBean.category.title}" kategorisine gönderilmiş olan tüm makalelere buradan ulaşabilirsiniz.</p>
+	    			<p class="lead">"#{articleListBackingBean.category.title}" kategorisine gönderilmiş olan tüm makaleler</p>
+	    		</c:if>
+	    		<c:if test="#{articleListBackingBean.archived}">
+	    			<p class="lead">#{articleListBackingBean.currentArchive}nda gönderilmiş olan tüm makaleler</p>
 	    		</c:if>
 	    	</header>
 			<!-- /Page Header -->
 			
 			<div class="row">
 				<div class="span9">
+					<hr />
 				    <c:if test="#{! empty articleListBackingBean.articleList}">
 						<ui:repeat value="#{articleListBackingBean.paginator.model}" var="article">
-					    	<hr />
+					    	
 					    	<!-- Header -->
 							<header class="jumbotron subhead">
 					    		<h2>
@@ -70,43 +77,82 @@
 					  		<br />
 							<p><h:outputText value="#{article.content}" escape="false" /></p>
 							<br />
+							<hr />
 					    </ui:repeat>
-					    
+					    	
 					    <!-- Pagination -->
 					    <h:form styleClass="pagination pagination-centered">
-					    	<c:if test="#{empty articleListBackingBean.category}">
+					    	<c:if test="#{(! articleListBackingBean.archived) and (empty articleListBackingBean.category)}">
 						    	<ul>
-									<li>
-										<h:commandLink value="←" style="color: black;" action="#{articleListBackingBean.paginator.prev}" />
-									</li>
+						    		<c:if test="#{articleListBackingBean.paginator.hasPrev()}">
+										<li>
+											<h:commandLink value="←" 
+														style="color: black;"
+														action="#{articleListBackingBean.paginator.prev}" />
+										</li>
+									</c:if>
 									<li>
 										<a href="#" style="color: black;">
 											#{articleListBackingBean.paginator.pageIndex} / #{articleListBackingBean.paginator.pages}
 										</a>
 									</li>
-									<li>
-										<h:commandLink value="→" style="color: black;" action="#{articleListBackingBean.paginator.next}" />
-									</li>
+									<c:if test="#{articleListBackingBean.paginator.hasNext()}">
+										<li>
+											<h:commandLink value="→"
+														style="color: black;"
+														action="#{articleListBackingBean.paginator.next}" />
+										</li>
+									</c:if>
 									<h:inputHidden value="#{articleListBackingBean.paginator.pageIndex}" />
 								</ul>
 							</c:if>
 							<c:if test="#{! empty articleListBackingBean.category}">
 						    	<ul>
-									<li>
-										<h:commandLink value="←" style="color: black;" action="#{articleListBackingBean.paginator.prev}">
-											<f:param name="categoryId" value="#{articleListBackingBean.category.id}" />
-										</h:commandLink>
-									</li>
+						    		<c:if test="#{articleListBackingBean.paginator.hasPrev()}">
+										<li>
+											<h:commandLink value="←" style="color: black;" action="#{articleListBackingBean.paginator.prev}">
+												<f:param name="categoryId" value="#{articleListBackingBean.category.id}" />
+											</h:commandLink>
+										</li>
+									</c:if>
 									<li>
 										<a href="#" style="color: black;">
 											#{articleListBackingBean.paginator.pageIndex} / #{articleListBackingBean.paginator.pages}
 										</a>
 									</li>
+									<c:if test="#{articleListBackingBean.paginator.hasNext()}">
+										<li>
+											<h:commandLink value="→" style="color: black;" action="#{articleListBackingBean.paginator.next}">
+												<f:param name="categoryId" value="#{articleListBackingBean.category.id}" />
+											</h:commandLink>
+										</li>
+									</c:if>
+									<h:inputHidden value="#{articleListBackingBean.paginator.pageIndex}" />
+								</ul>
+							</c:if>
+							<c:if test="#{articleListBackingBean.archived}">
+						    	<ul>
+						    		<c:if test="#{articleListBackingBean.paginator.hasPrev()}">
+										<li>
+											<h:commandLink value="←" style="color: black;" action="#{articleListBackingBean.paginator.prev}">
+												<f:param name="month" value="#{articleListBackingBean.month}" />
+												<f:param name="year" value="#{articleListBackingBean.year}" />
+											</h:commandLink>
+										</li>
+									</c:if>
 									<li>
-										<h:commandLink value="→" style="color: black;" action="#{articleListBackingBean.paginator.next}">
-											<f:param name="categoryId" value="#{articleListBackingBean.category.id}" />
-										</h:commandLink>
+										<a href="#" style="color: black;">
+											#{articleListBackingBean.paginator.pageIndex} / #{articleListBackingBean.paginator.pages}
+										</a>
 									</li>
+									<c:if test="#{articleListBackingBean.paginator.hasNext()}">
+										<li>
+											<h:commandLink value="→" style="color: black;" action="#{articleListBackingBean.paginator.next}">
+												<f:param name="month" value="#{articleListBackingBean.month}" />
+												<f:param name="year" value="#{articleListBackingBean.year}" />
+											</h:commandLink>
+										</li>
+									</c:if>
 									<h:inputHidden value="#{articleListBackingBean.paginator.pageIndex}" />
 								</ul>
 							</c:if>
@@ -115,7 +161,6 @@
 						
 				    </c:if>
 				    <c:if test="#{empty articleListBackingBean.articleList}">
-				    	<hr />
 				    	Yok ki...
 				    </c:if>
 				</div><!-- end of span9 -->
@@ -142,7 +187,21 @@
 				    <legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
 						<i class="icon-folder-open"></i> Arşiv
 					</legend>
-				    Yok ki...
+				    <c:if test="#{! empty articleListBackingBean.monthsAsStringList}">
+						<ul>
+							<ui:repeat value="#{articleListBackingBean.monthsAsStringList}" var="month">
+								<h:form style="margin: 0px; padding: 0px" rendered="#{articleListBackingBean.getArticleCountByMonth(month) != 0}">
+							    	<li>
+							    		<h:commandLink value="#{month}"
+							    			action="#{articleListBackingBean.toArchiveAction(month)}" />
+								    </li>
+								    </h:form>
+							</ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty articleListBackingBean.monthsAsStringList}">
+				    	Yok ki...
+				    </c:if>
 				</div><!-- end of span3 -->
 		    </div><!-- end of row -->
 		</ui:define>

@@ -1,10 +1,13 @@
 package uniform.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import uniform.entity.News;
 
@@ -61,6 +64,56 @@ public class NewsDAO extends AbstractDAO {
 		List<News> news = (ArrayList<News>) criteria.list();
 		session.getTransaction().commit();
 		return news;
+	}
+	
+	public Date getLastsPublishedDate() {
+		session = getCurrentSession();
+		session.beginTransaction();
+		News news = (News) session.createCriteria(News.class)
+										.addOrder(Order.desc("publishedDate"))
+										.setMaxResults(1)
+										.uniqueResult();
+		if (news == null) {
+			return null;
+		}
+		return news.getPublishedDate();
+	}
+	
+	public Date getFirstsPublishedDate() {
+		session = getCurrentSession();
+		session.beginTransaction();
+		News news = (News) session.createCriteria(News.class)
+										.addOrder(Order.asc("publishedDate"))
+										.setMaxResults(1)
+										.uniqueResult();
+		if (news == null) {
+			return null;
+		}
+		return news.getPublishedDate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<News> getAllBetweenDates(Date starting, Date ending) {
+		session = getCurrentSession();
+		session.beginTransaction();
+		Criteria criteria = session.createCriteria(News.class)
+								.add(Restrictions.ge("publishedDate", starting))
+								.add(Restrictions.le("publishedDate", ending))
+								.addOrder(Order.desc("publishedDate"));
+		List<News> news = (ArrayList<News>) criteria.list();
+		session.getTransaction().commit();
+		return news;
+	}
+
+	public Long getCountBetweenDates(Date starting, Date ending) {
+		session = getCurrentSession();
+		session.beginTransaction();
+		Criteria criteria = session.createCriteria(News.class)
+								.add(Restrictions.ge("publishedDate", starting))
+								.add(Restrictions.le("publishedDate", ending));
+		Long count = (Long) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		session.getTransaction().commit();
+		return count;
 	}
 	
 }
