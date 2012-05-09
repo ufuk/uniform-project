@@ -6,21 +6,60 @@
 
 	<ui:composition template="generalTemplate.xhtml">
 		<ui:define name="title">
-		    Hata!
+		    Hay aksi!
 		</ui:define>
 		<ui:define name="content">
 			<div class="row">
 				<div class="span12">
 					<br />
 					<div class="hero-unit">
-						<h1>Hata!</h1>
+						<h1>Hay aksi!</h1>
 						<p>
-							Yaptığınız işlemlerin doğruluğundan eminseniz tekrar lütfen deneyin. 
-							Hatanın tekrarlaması halinde ise hatayı sistem yöneticilerine raporlayabilirsiniz.
+							İsteğiniz yerine getirilmeye çalışılırken bir hata meydana geldi. Yaptığınız işlemlerin 
+							doğruluğundan eminseniz tekrar lütfen deneyin. 
+							Hatanın tekrarlaması halinde ise hatayı sistem yöneticilerine raporlayabilirsiniz. <br />
+							(Hatayı raporlayabilmeniz için sisteme giriş yapmış olmanız gerekmektedir.)
 						</p>
 						<p>
-							<a class="btn btn-danger btn-large">Hatayı raporla</a>
+							<c:if test="#{userBean.isLoggedIn()}">
+								<a class="btn btn-danger" data-toggle="modal" href="#reportErrorDialog">Hatayı raporla</a>
+							</c:if>
+							<c:if test="#{!userBean.isLoggedIn()}">
+								<a class="btn btn-danger disabled">Hatayı raporla</a>
+							</c:if>
 						</p>
+						<!-- Message Dialog -->
+						<div class="modal hide fade" id="reportErrorDialog">
+							<div class="modal-header">
+								<a href="#" class="close" data-dismiss="modal">x</a>
+								<h3>Hatayı raporla</h3>
+							</div>
+							<div class="modal-body">
+								<h:form styleClass="form-horizontal">
+									<fieldset>
+										<div class="control-group">
+											<h:outputLabel styleClass="control-label" value="Açıklama" />
+											<div class="controls">
+												<h:inputTextarea value="#{errorPageBackingBean.report}"
+							    							required="true"
+							    							styleClass="input-xlarge"
+							    							requiredMessage="'Mesajınız' alanı boş bırakılamaz" />
+											</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<h:commandLink styleClass="btn btn-danger" value="Hatayı raporla"
+															action="#{errorPageBackingBean.reportErrorAction}">
+						    						<f:ajax execute="@form" render="@this" />
+						    					</h:commandLink>
+						    					<a href="#" class="btn" onclick="$('#reportErrorDialog').modal('hide');">Vazgeç</a>
+											</div>
+										</div>
+									</fieldset>
+								</h:form>
+							</div>
+						</div>
+						<!-- /Message Dialog -->
 					</div>
 				</div>
 			</div>

@@ -7,11 +7,11 @@
 
 	<!-- Project's Name and Description -->
 	<display-name>Uniform</display-name>
-	<description>An Online University Magazine: Uniform Project</description>
+	<description>An Online University Magazine: Uniform</description>
 
 	<!-- Welcome File List -->
 	<welcome-file-list>
-		<welcome-file>faces/articleList.xhtml</welcome-file>
+		<welcome-file>faces/mainPage.xhtml</welcome-file>
 	</welcome-file-list>
 
 	<!-- Faces Servlet Mapping -->

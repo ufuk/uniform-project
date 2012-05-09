@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<h:head>
 		<meta charset="utf-8" />
@@ -41,7 +42,7 @@
 							<li class=""><h:link outcome="announcementList">Duyurular</h:link></li>
 						</ul>
 		                <ul class="nav pull-right">
-		                	<c:if test="#{! userBean.isLoggedIn()}">
+		                	<c:if test="#{(!userBean.isLoggedIn()) and (fn:substringAfter(facesContext.viewRoot.viewId, '/') != 'mainPage.xhtml')}">
 								<h:link outcome="login" styleClass="btn btn-primary">Giriş</h:link>
 								<li class="divider-vertical"></li>
 								<h:link outcome="register" styleClass="btn btn-danger">Kayıt</h:link>
