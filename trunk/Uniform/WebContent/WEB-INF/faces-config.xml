@@ -5,12 +5,11 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
     version="2.0">
 
-	<!-- Exception Handling Mechanism 
+	<!-- Exception Handling Mechanism -->
 	<factory>
 		<exception-handler-factory>
 			uniform.view.exceptionhandling.MyExceptionHandlerFactory
 		</exception-handler-factory>
 	</factory>
-	-->
 	
 </faces-config>
