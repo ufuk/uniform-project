@@ -3,6 +3,7 @@ package uniform.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,8 @@ public class Reply implements Serializable {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
+	@Column(length=2048)
 	private String content;
 	
 	@ManyToOne

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,9 +21,11 @@ public class Message implements Serializable {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
+	@Column(length=1024)
 	private String title;
-	
+
+	@Column(length=2048)
 	private String content;
 	
 	private Date sentDate;

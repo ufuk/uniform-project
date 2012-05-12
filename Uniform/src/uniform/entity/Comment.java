@@ -3,6 +3,7 @@ package uniform.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,7 +19,8 @@ public class Comment implements Serializable {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
+	@Column(length=2048)
 	private String content;
 	
 	private Date publishedDate;
