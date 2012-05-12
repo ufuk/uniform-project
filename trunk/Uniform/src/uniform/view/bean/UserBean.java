@@ -18,7 +18,7 @@ public class UserBean extends AbstractBackingBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private User currentUser = null;
-	
+
 	public User getCurrentUser() {
 		return currentUser;
 	}
