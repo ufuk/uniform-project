@@ -27,7 +27,7 @@ public class LostPasswordBackingBean extends AbstractBackingBean {
 			String text = "Kullanýcý Parolanýz: " + user.getPassword() + "\n\n" +
 					"Sisteme giriþ yaptýktan sonra mevcut parolanýzý deðiþtirmenizi öneririz.\n\n" +
 					"--\nSistem Yöneticisi";
-			Boolean result = EmailSender.send(email, subject, text);
+			Boolean result = (new EmailSender()).send(email, subject, text);
 			if (!result) {
 				navigateToErrorPage();
 			}
