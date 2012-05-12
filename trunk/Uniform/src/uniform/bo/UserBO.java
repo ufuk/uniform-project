@@ -7,6 +7,7 @@ import uniform.entity.Article;
 import uniform.entity.Category;
 import uniform.entity.Comment;
 import uniform.entity.Department;
+import uniform.entity.Message;
 import uniform.entity.User;
 
 public class UserBO {
@@ -33,6 +34,10 @@ public class UserBO {
 			comment.setVisitorName(user.getFullName());
 			comment.setVisitorEmail(user.getEmail());
 			commentBO.saveOrUpdate(comment);
+		}
+		MessageBO messageBO = new MessageBO();
+		for (Message message : messageBO.getAllByUser(user)) {
+			messageBO.delete(message);
 		}
 		dismissFromAllModeratingJobs(user);
 		userDAO.delete(user);

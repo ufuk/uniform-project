@@ -73,6 +73,19 @@ public class MessageDAO extends AbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Message> getAllByUser(User user) {
+		session = getCurrentSession();
+		session.beginTransaction();
+		Criteria criteria = session.createCriteria(Message.class)
+										.add(Restrictions.or(
+												Restrictions.eq("sender", user),
+												Restrictions.eq("receiver", user)));
+		List<Message> messages = (ArrayList<Message>) criteria.list();
+		session.getTransaction().commit();
+		return messages;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Message> getAllDeletedByUser(User user) {
 		session = getCurrentSession();
 		session.beginTransaction();

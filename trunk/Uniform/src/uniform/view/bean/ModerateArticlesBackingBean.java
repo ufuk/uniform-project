@@ -69,16 +69,18 @@ public class ModerateArticlesBackingBean extends AbstractBackingBean {
 		article.setDeleted(false);
 		articleBO.saveOrUpdate(article);
 		
-		// Send a information message about confirmation
-		MessageBO messageBO = new MessageBO();
-		Message message = new Message();
-		message.setTitle("Makaleniz Yayýnlandý");
-		message.setSender(getUserBean().getCurrentUser());
-		message.setReceiver(article.getAuthor());
-		message.setSentDate(new Date((new Date().getTime())));
-		message.setContent("'" + article.getTitle() +
-				"' baþlýklý makaleniz yayýna alýnmýþtýr. Katkýlarýnýzdan dolayý teþekkür ederiz.");
-		messageBO.saveOrUpdate(message);
+		// Send a information message about rejection
+		if (article.getAuthor() != null) {
+			MessageBO messageBO = new MessageBO();
+			Message message = new Message();
+			message.setTitle("Makaleniz Yayýnlandý");
+			message.setSender(getUserBean().getCurrentUser());
+			message.setReceiver(article.getAuthor());
+			message.setSentDate(new Date((new Date().getTime())));
+			message.setContent("'" + article.getTitle() +
+					"' baþlýklý makaleniz yayýna alýnmýþtýr. Katkýlarýnýzdan dolayý teþekkür ederiz.");
+			messageBO.saveOrUpdate(message);
+		}
 		
 		return "moderateArticles?faces-redirect=true&confirmationStatus=" + confirmationStatus;
 	}
@@ -87,6 +89,20 @@ public class ModerateArticlesBackingBean extends AbstractBackingBean {
 		ArticleBO articleBO = new ArticleBO();
 		article.setConfirmationStatus(Confirmation.NOT_CONFIRMED);
 		articleBO.saveOrUpdate(article);
+		
+		// Send a information message about confirmation
+		if (article.getAuthor() != null) {
+			MessageBO messageBO = new MessageBO();
+			Message message = new Message();
+			message.setTitle("Makaleniz Reddedildi");
+			message.setSender(getUserBean().getCurrentUser());
+			message.setReceiver(article.getAuthor());
+			message.setSentDate(new Date((new Date().getTime())));
+			message.setContent("'" + article.getTitle() +
+					"' baþlýklý makaleniz yönetici tarafýndan uygun bulunmamýþtýr!");
+			messageBO.saveOrUpdate(message);
+		}
+		
 		return "moderateArticles?faces-redirect=true&confirmationStatus=" + confirmationStatus;
 	}
 	

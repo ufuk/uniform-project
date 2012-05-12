@@ -33,6 +33,10 @@ public class MessageBO {
 	public List<Message> getAllActiveByUser(User user) {
 		return messageDAO.getAllActiveByUser(user);
 	}
+	
+	public List<Message> getAllByUser(User user) {
+		return messageDAO.getAllByUser(user);
+	}
 
 	public List<Message> getAllDeletedByUser(User user) {
 		return messageDAO.getAllDeletedByUser(user);
