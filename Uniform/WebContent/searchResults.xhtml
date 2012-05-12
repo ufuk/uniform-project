@@ -1,0 +1,87 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition template="generalTemplate.xhtml">
+		<ui:define name="title">
+		    Arama Sonuçları
+		</ui:define>
+		<ui:define name="content">
+		
+			<!-- Page Header -->
+			<header class="jumbotron subhead">
+	    		<h1>Arama Sonuçları</h1>
+	    		<p class="lead">Sağladığınız anahtar kelimelere uygun arama sonuçları</p>
+	    	</header>
+			<!-- /Page Header -->
+			
+			<div class="row">
+				<div class="span12">
+					<hr />
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="span4">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						Makaleler arasından bulunanlar
+					</legend>
+					<c:if test="#{! empty searchEngineBackingBean.searchResultsForArticle}">
+						<ul>
+							<ui:repeat value="#{searchEngineBackingBean.searchResultsForArticle}" var="article">
+						    	<li>
+							    	<h:link value="#{article.title}" outcome="articleDetail">
+							    		<f:param name="articleId" value="#{article.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty searchEngineBackingBean.searchResultsForArticle}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+				<div class="span4">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						Haberler arasından bulunanlar
+					</legend>
+					<c:if test="#{! empty searchEngineBackingBean.searchResultsForNews}">
+						<ul>
+							<ui:repeat value="#{searchEngineBackingBean.searchResultsForNews}" var="news">
+						    	<li>
+							    	<h:link value="#{news.title}" outcome="newsDetail">
+							    		<f:param name="newsId" value="#{news.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty searchEngineBackingBean.searchResultsForNews}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+				<div class="span4">
+					<legend style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+						Duyurular arasından bulunanlar
+					</legend>
+					<c:if test="#{! empty searchEngineBackingBean.searchResultsForAnnouncement}">
+						<ul>
+							<ui:repeat value="#{searchEngineBackingBean.searchResultsForAnnouncement}" var="announcement">
+						    	<li>
+							    	<h:link value="#{announcement.title}" outcome="announcementDetail">
+							    		<f:param name="announcementId" value="#{announcement.id}" />
+							    	</h:link>
+							    </li>
+						    </ui:repeat>
+						</ul>
+				    </c:if>
+				    <c:if test="#{empty searchEngineBackingBean.searchResultsForAnnouncement}">
+				    	Yok ki...
+				    </c:if>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</html>
