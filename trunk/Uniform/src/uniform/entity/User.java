@@ -2,6 +2,7 @@ package uniform.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,7 +38,8 @@ public class User implements Serializable {
 	
 	@ManyToOne
 	private Department department;
-	
+
+	@Column(length=2048)
 	private String about;
 	
 	private Boolean active = false;

@@ -17,6 +17,7 @@ public class Announcement implements Serializable {
 	@GeneratedValue
 	private Long id;
 	
+	@Column(length=1024)
 	private String title;
 	
 	// TODO: for mysql, change columnDefinition "CLOB" to "MEDIUMTEXT"
