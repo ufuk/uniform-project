@@ -3,6 +3,6 @@
 	<host>smtp.gmail.com</host>
 	<port>587</port>
 	<authentication>true</authentication>
-	<user>ufukuzun.ce@gmail.com</user>
-	<password>seemeplayme</password>
+	<user>uniform.project.email@gmail.com</user>
+	<password>seemeplay</password>
 </smtp-configuration>

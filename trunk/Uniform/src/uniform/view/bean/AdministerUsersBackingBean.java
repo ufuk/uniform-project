@@ -60,7 +60,7 @@ public class AdministerUsersBackingBean extends AbstractBackingBean {
 				"Kayýt olurken belirlediðiniz parolanýzla sisteme giriþ yaparak sistemi " +
 				"kullanmaya baþlayabilirsiniz.\n\n" +
 				"--\nSistem Yöneticisi";
-		Boolean result = EmailSender.send(user.getEmail(), subject, text);
+		Boolean result = (new EmailSender()).send(user.getEmail(), subject, text);
 		if (!result) {
 			addFacesMessage("E-posta gönderilemedi!");
 			return null;

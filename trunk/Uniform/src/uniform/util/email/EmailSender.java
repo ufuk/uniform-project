@@ -10,13 +10,13 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailSender {
 
-	public static Boolean send(String to, String subject, String text) {
+	public Boolean send(String to, String subject, String text) {
 		try {
 			System.out.println("E-posta gönderiliyor...");
 			
-			// TODO: Find relative path for smtp configuration file
-			SmtpServerConfiguration ssc = new SmtpServerConfiguration(new File(
-					"E:\\Dev\\eclipse-workspace\\Uniform\\WebContent\\WEB-INF\\smtp.cfg.xml"));
+			String filePathAndName = this.getClass().getResource("/").getFile();
+			filePathAndName = filePathAndName.replaceFirst("WEB-INF/classes/", "WEB-INF/smtp.cfg.xml");
+			SmtpServerConfiguration ssc = new SmtpServerConfiguration(new File(filePathAndName));
 
 			Session session = Session.getDefaultInstance(ssc.configure(), null);
 			

@@ -22,9 +22,9 @@ public class EmailSettingsBackingBean extends AbstractBackingBean {
 	private String password = "";
 
 	public void init() {
-		// TODO: Find relative path for smtp configuration file
-		SmtpServerConfiguration ssc = new SmtpServerConfiguration(new File(
-				"E:\\Dev\\eclipse-workspace\\Uniform\\WebContent\\WEB-INF\\smtp.cfg.xml"));
+		String filePathAndName = this.getClass().getResource("/").getFile();
+		filePathAndName = filePathAndName.replaceFirst("WEB-INF/classes/", "WEB-INF/smtp.cfg.xml");
+		SmtpServerConfiguration ssc = new SmtpServerConfiguration(new File(filePathAndName));
 
 		starttlsEnable = Boolean.valueOf(ssc.getStarttlsEnable());
 		host = ssc.getHost();
@@ -83,11 +83,10 @@ public class EmailSettingsBackingBean extends AbstractBackingBean {
 	}
 	
 	public String modifyAction() {
-		// TODO: Find relative path for smtp configuration file
-		SmtpServerConfiguration ssc = new SmtpServerConfiguration(new File(
-				"E:\\Dev\\eclipse-workspace\\Uniform\\WebContent\\WEB-INF\\smtp.cfg.xml"));
+		String filePathAndName = this.getClass().getResource("/").getFile();
+		filePathAndName = filePathAndName.replaceFirst("WEB-INF/classes/", "WEB-INF/smtp.cfg.xml");
+		SmtpServerConfiguration ssc = new SmtpServerConfiguration(new File(filePathAndName));
 		ssc.modifyConfiguration(starttlsEnable.toString(), host, port, authentication.toString(), user, password);
-		
 		return "emailSettings?faces-redirect=true";
 	}
 
