@@ -18,14 +18,14 @@ import uniform.entity.User;
 public class ArticleDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Article article) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(article);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Article article) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long id = (Long) session.save(article);
 		session.getTransaction().commit();
@@ -33,14 +33,14 @@ public class ArticleDAO extends AbstractDAO {
 	}
 	
 	public void delete(Article article) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(article);
 		session.getTransaction().commit();
 	}
 	
 	public Article getById(Long id, Boolean deleted) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Article article = (Article) session.createCriteria(Article.class)
 								.add(Restrictions.eq("deleted", deleted))
@@ -54,7 +54,7 @@ public class ArticleDAO extends AbstractDAO {
 	}
 	
 	public Article getByIdAndInitializeLikedUsers(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Article article = (Article) session.get(Article.class, id);
 		Hibernate.initialize(article.getLikedUsers());
@@ -64,7 +64,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
@@ -77,7 +77,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllAndPaginate(int firstResult, int maxResult) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 								.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
@@ -92,7 +92,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllByCategory(Category category) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("category", category));
@@ -103,7 +103,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllConfirmedByCategory(Category category) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
@@ -117,7 +117,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllByConfirmation(Confirmation confirmation) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("confirmationStatus", confirmation))
@@ -130,7 +130,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllByModerator(Confirmation confirmation, User moderator) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 									.add(Restrictions.eq("confirmationStatus", confirmation))
@@ -145,7 +145,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllDeleted() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("deleted", true))
@@ -157,7 +157,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllDeletedByModerator(User moderator) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 									.add(Restrictions.eq("deleted", true))
@@ -171,7 +171,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllByAuthor(User author) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("author", author));
@@ -182,7 +182,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllByAuthor(User author, Confirmation confirmation, Boolean deleted) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 										.add(Restrictions.eq("author", author))
@@ -196,7 +196,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllByAuthorAndPaginate(User author, int firstResult, int maxResult) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 								.add(Restrictions.eq("author", author))
@@ -212,7 +212,7 @@ public class ArticleDAO extends AbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllLikedByUser(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 									.addOrder(Order.desc("publishedDate"))
@@ -224,7 +224,7 @@ public class ArticleDAO extends AbstractDAO {
 	}
 	
 	public Date getLastsPublishedDate() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Article article = (Article) session.createCriteria(Article.class)
 										.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
@@ -239,7 +239,7 @@ public class ArticleDAO extends AbstractDAO {
 	}
 	
 	public Date getFirstsPublishedDate() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Article article = (Article) session.createCriteria(Article.class)
 										.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
@@ -255,7 +255,7 @@ public class ArticleDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> getAllBetweenDates(Date starting, Date ending) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 								.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
@@ -269,7 +269,7 @@ public class ArticleDAO extends AbstractDAO {
 	}
 
 	public Long getCountBetweenDates(Date starting, Date ending) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Article.class)
 								.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))

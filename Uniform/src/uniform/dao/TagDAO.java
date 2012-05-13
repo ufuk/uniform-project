@@ -8,21 +8,21 @@ import uniform.entity.Tag;
 public class TagDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Tag tag) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(tag);
 		session.getTransaction().commit();
 	}
 	
 	public void delete(Tag tag) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(tag);
 		session.getTransaction().commit();
 	}
 	
 	public Tag getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Tag tag = (Tag) session.get(Tag.class, id);
 		session.getTransaction().commit();
@@ -31,7 +31,7 @@ public class TagDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Tag> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		List<Tag> tags = (ArrayList<Tag>) session.createCriteria(Tag.class).list();
 		session.getTransaction().commit();

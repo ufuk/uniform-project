@@ -13,14 +13,14 @@ import uniform.entity.Reply;
 public class ReplyDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Reply reply) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(reply);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Reply reply) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long id = (Long) session.save(reply);
 		session.getTransaction().commit();
@@ -28,14 +28,14 @@ public class ReplyDAO extends AbstractDAO {
 	}
 	
 	public void delete(Reply reply) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(reply);
 		session.getTransaction().commit();
 	}
 	
 	public Reply getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Reply reply = (Reply) session.get(Reply.class, id);
 		session.getTransaction().commit();
@@ -44,7 +44,7 @@ public class ReplyDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Reply> getByMessage(Message message) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Reply.class)
 										.add(Restrictions.eq("message", message))
@@ -56,7 +56,7 @@ public class ReplyDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Reply> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Reply.class)
 										.addOrder(Order.desc("sentDate"));

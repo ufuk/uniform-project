@@ -16,21 +16,21 @@ import uniform.entity.User;
 public class CommentDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Comment comment) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(comment);
 		session.getTransaction().commit();
 	}
 	
 	public void delete(Comment comment) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(comment);
 		session.getTransaction().commit();
 	}
 	
 	public Comment getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Comment comment = (Comment) session.get(Comment.class, id);
 		Hibernate.initialize(comment.getArticle());
@@ -40,7 +40,7 @@ public class CommentDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		List<Comment> comments = (ArrayList<Comment>) session.createCriteria(Comment.class).list();
 		session.getTransaction().commit();
@@ -49,7 +49,7 @@ public class CommentDAO extends AbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAllByArticle(Article article) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Comment.class)
 										.add(Restrictions.eq("article", article))
@@ -63,7 +63,7 @@ public class CommentDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAllByConfirmation(Confirmation confirmation) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Comment.class)
 										.add(Restrictions.eq("confirmationStatus", confirmation))
@@ -76,7 +76,7 @@ public class CommentDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAllByModerator(Confirmation confirmation, User moderator) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Comment.class)
 									.add(Restrictions.eq("confirmationStatus", confirmation))
@@ -92,7 +92,7 @@ public class CommentDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAllDeleted() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Comment.class)
 										.add(Restrictions.eq("deleted", true))
@@ -104,7 +104,7 @@ public class CommentDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAllDeletedByModerator(User moderator) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Comment.class)
 									.add(Restrictions.eq("deleted", true))
@@ -119,7 +119,7 @@ public class CommentDAO extends AbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Comment> getAllByAuthor(User author) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Comment.class)
 									.add(Restrictions.eq("author", author));

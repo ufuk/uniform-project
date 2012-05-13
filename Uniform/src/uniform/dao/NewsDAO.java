@@ -14,14 +14,14 @@ import uniform.entity.News;
 public class NewsDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(News news) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(news);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(News news) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long id = (Long) session.save(news);
 		session.getTransaction().commit();
@@ -29,14 +29,14 @@ public class NewsDAO extends AbstractDAO {
 	}
 	
 	public void delete(News news) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(news);
 		session.getTransaction().commit();
 	}
 	
 	public News getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		News news = (News) session.get(News.class, id);
 		session.getTransaction().commit();
@@ -45,7 +45,7 @@ public class NewsDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<News> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		List<News> news = (ArrayList<News>) session.createCriteria(News.class)
 											.addOrder(Order.desc("publishedDate"))
@@ -56,7 +56,7 @@ public class NewsDAO extends AbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<News> getAllAndPaginate(int firstResult, int maxResult) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(News.class).addOrder(Order.desc("publishedDate"));
 		criteria.setFirstResult(firstResult);
@@ -67,7 +67,7 @@ public class NewsDAO extends AbstractDAO {
 	}
 	
 	public Date getLastsPublishedDate() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		News news = (News) session.createCriteria(News.class)
 										.addOrder(Order.desc("publishedDate"))
@@ -80,7 +80,7 @@ public class NewsDAO extends AbstractDAO {
 	}
 	
 	public Date getFirstsPublishedDate() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		News news = (News) session.createCriteria(News.class)
 										.addOrder(Order.asc("publishedDate"))
@@ -94,7 +94,7 @@ public class NewsDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<News> getAllBetweenDates(Date starting, Date ending) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(News.class)
 								.add(Restrictions.ge("publishedDate", starting))
@@ -106,7 +106,7 @@ public class NewsDAO extends AbstractDAO {
 	}
 
 	public Long getCountBetweenDates(Date starting, Date ending) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(News.class)
 								.add(Restrictions.ge("publishedDate", starting))

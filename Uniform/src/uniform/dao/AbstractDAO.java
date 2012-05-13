@@ -8,22 +8,24 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 public abstract class AbstractDAO {
 	
-	private SessionFactory sessionFactory;
+	private static SessionFactory sessionFactory;
 	
 	private ServiceRegistry serviceRegistry;
 	
 	protected Session session;
 	
-	protected Session getCurrentSession() {
-		try {
-			Configuration configuration = new Configuration();
-		    configuration.configure();
-		    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();        
-		    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-		} catch (Exception e) {
-			e.printStackTrace();
+	protected Session openSession() {
+		if (sessionFactory == null) {
+			try {
+				Configuration configuration = new Configuration();
+			    configuration.configure();
+			    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();        
+			    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		return sessionFactory.getCurrentSession();
+		return sessionFactory.openSession();
 	}
 	
 }

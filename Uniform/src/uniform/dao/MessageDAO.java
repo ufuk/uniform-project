@@ -15,14 +15,14 @@ import uniform.entity.User;
 public class MessageDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Message message) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(message);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Message message) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long id = (Long) session.save(message);
 		session.getTransaction().commit();
@@ -30,14 +30,14 @@ public class MessageDAO extends AbstractDAO {
 	}
 	
 	public void delete(Message message) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(message);
 		session.getTransaction().commit();
 	}
 	
 	public Message getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Message message = (Message) session.get(Message.class, id);
 		Hibernate.initialize(message.getReplies());
@@ -47,7 +47,7 @@ public class MessageDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Message> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		List<Message> messages = (ArrayList<Message>) session.createCriteria(Message.class).list();
 		session.getTransaction().commit();
@@ -56,7 +56,7 @@ public class MessageDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Message> getAllActiveByUser(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Message.class)
 										.add(Restrictions.or(
@@ -74,7 +74,7 @@ public class MessageDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Message> getAllByUser(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Message.class)
 										.add(Restrictions.or(
@@ -87,7 +87,7 @@ public class MessageDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Message> getAllDeletedByUser(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Message.class)
 						.add(Restrictions.or(
@@ -114,7 +114,7 @@ public class MessageDAO extends AbstractDAO {
 	}
 	
 	public Long getNotReadedMessagesCountByUser(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long count = (Long) session.createCriteria(Message.class)
 									.add(Restrictions.or(

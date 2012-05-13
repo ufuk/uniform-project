@@ -14,21 +14,21 @@ import uniform.entity.User;
 public class UserDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(user);
 		session.getTransaction().commit();
 	}
 	
 	public void delete(User user) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(user);
 		session.getTransaction().commit();
 	}
 	
 	public User getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		User user = (User) session.get(User.class, id);
 		session.getTransaction().commit();
@@ -37,7 +37,7 @@ public class UserDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<User> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		List<User> users = (ArrayList<User>) session.createCriteria(User.class).list();
 		session.getTransaction().commit();
@@ -46,7 +46,7 @@ public class UserDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<User> getAllByDeparment(Department department) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(User.class)
 										.add(Restrictions.eq("department", department));
@@ -56,7 +56,7 @@ public class UserDAO extends AbstractDAO {
 	}
 	
 	public User getByEmail(String email) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		User user = (User) session.createCriteria(User.class)
 								.add(Restrictions.eq("email", email)).uniqueResult();
@@ -66,7 +66,7 @@ public class UserDAO extends AbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<User> getSystemAdmins() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		List<User> users = (ArrayList<User>) session.createCriteria(User.class)
 								.add(Restrictions.eq("managementRole", ManagementRole.SYSTEM_ADMIN))
@@ -76,7 +76,7 @@ public class UserDAO extends AbstractDAO {
 	}
 	
 	public Long getCount() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long count = (Long) session.createCriteria(User.class)
 									.setProjection(Projections.rowCount()).uniqueResult();
