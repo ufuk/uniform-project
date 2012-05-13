@@ -18,7 +18,7 @@ public class SearchEngineDAO extends AbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Article> searchInArticles(List<String> keywords) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		
 		Criteria criteriaForSearch = session.createCriteria(Article.class)
@@ -51,7 +51,7 @@ public class SearchEngineDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<News> searchInNews(List<String> keywords) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		
 		Criteria criteriaForSearch = session.createCriteria(News.class)
@@ -81,7 +81,7 @@ public class SearchEngineDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Announcement> searchInAnnouncements(List<String> keywords) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		
 		Criteria criteriaForSearch = session.createCriteria(Announcement.class)

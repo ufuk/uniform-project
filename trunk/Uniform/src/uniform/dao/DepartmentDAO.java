@@ -12,21 +12,21 @@ import uniform.entity.Department;
 public class DepartmentDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Department department) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(department);
 		session.getTransaction().commit();
 	}
 	
 	public void delete(Department department) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(department);
 		session.getTransaction().commit();
 	}
 	
 	public Department getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Department department = (Department) session.get(Department.class, id);
 		session.getTransaction().commit();
@@ -35,7 +35,7 @@ public class DepartmentDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Department> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Department.class)
 										.addOrder(Order.asc("name"));
@@ -45,7 +45,7 @@ public class DepartmentDAO extends AbstractDAO {
 	}
 	
 	public Department getByName(String name) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Department.class)
 										.add(Restrictions.eq("name", name));

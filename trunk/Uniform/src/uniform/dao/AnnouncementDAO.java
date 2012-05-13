@@ -14,14 +14,14 @@ import uniform.entity.Announcement;
 public class AnnouncementDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Announcement announcement) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(announcement);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Announcement announcement) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long id = (Long) session.save(announcement);
 		session.getTransaction().commit();
@@ -29,14 +29,14 @@ public class AnnouncementDAO extends AbstractDAO {
 	}
 	
 	public void delete(Announcement announcement) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(announcement);
 		session.getTransaction().commit();
 	}
 	
 	public Announcement getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Announcement announcement = (Announcement) session.get(Announcement.class, id);
 		session.getTransaction().commit();
@@ -45,7 +45,7 @@ public class AnnouncementDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Announcement> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Announcement.class)
 										.addOrder(Order.desc("publishedDate"));
@@ -56,7 +56,7 @@ public class AnnouncementDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Announcement> getAllAndPaginate(int firstResult, int maxResult) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Announcement.class).addOrder(Order.desc("publishedDate"));
 		criteria.setFirstResult(firstResult);
@@ -67,7 +67,7 @@ public class AnnouncementDAO extends AbstractDAO {
 	}
 	
 	public Date getLastsPublishedDate() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Announcement announcement = (Announcement) session.createCriteria(Announcement.class)
 										.addOrder(Order.desc("publishedDate"))
@@ -80,7 +80,7 @@ public class AnnouncementDAO extends AbstractDAO {
 	}
 	
 	public Date getFirstsPublishedDate() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Announcement announcement = (Announcement) session.createCriteria(Announcement.class)
 										.addOrder(Order.asc("publishedDate"))
@@ -94,7 +94,7 @@ public class AnnouncementDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Announcement> getAllBetweenDates(Date starting, Date ending) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Announcement.class)
 								.add(Restrictions.ge("publishedDate", starting))
@@ -106,7 +106,7 @@ public class AnnouncementDAO extends AbstractDAO {
 	}
 
 	public Long getCountBetweenDates(Date starting, Date ending) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Announcement.class)
 								.add(Restrictions.ge("publishedDate", starting))

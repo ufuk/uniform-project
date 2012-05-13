@@ -14,21 +14,21 @@ import uniform.entity.User;
 public class CategoryDAO extends AbstractDAO {
 	
 	public void saveOrUpdate(Category category) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.saveOrUpdate(category);
 		session.getTransaction().commit();
 	}
 	
 	public void delete(Category category) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		session.delete(category);
 		session.getTransaction().commit();
 	}
 	
 	public Category getById(Long id) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Category category = (Category) session.get(Category.class, id);
 		session.getTransaction().commit();
@@ -37,7 +37,7 @@ public class CategoryDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Category> getAll() {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Category.class)
 										.addOrder(Order.asc("title"));
@@ -48,7 +48,7 @@ public class CategoryDAO extends AbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<Category> getByModerator(User moderator) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Criteria criteria = session.createCriteria(Category.class)
 										.add(Restrictions.eq("moderator", moderator));
@@ -58,7 +58,7 @@ public class CategoryDAO extends AbstractDAO {
 	}
 	
 	public Category getByTitle(String title) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Category category = (Category) session.createCriteria(Category.class)
 												.add(Restrictions.eq("title", title))
@@ -68,7 +68,7 @@ public class CategoryDAO extends AbstractDAO {
 	}
 	
 	public Long getModeratingCount(User moderator) {
-		session = getCurrentSession();
+		session = openSession();
 		session.beginTransaction();
 		Long count = (Long) session.createCriteria(Category.class)
 									.add(Restrictions.eq("moderator", moderator))
