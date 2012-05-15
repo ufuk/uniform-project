@@ -16,16 +16,16 @@ public class NewsDAO extends AbstractDAO {
 	public void saveOrUpdate(News news) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(news);
+		session.merge(news);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(News news) {
 		session = openSession();
 		session.beginTransaction();
-		Long id = (Long) session.save(news);
+		News newNews = (News) session.merge(news);
 		session.getTransaction().commit();
-		return id;
+		return newNews.getId();
 	}
 	
 	public void delete(News news) {

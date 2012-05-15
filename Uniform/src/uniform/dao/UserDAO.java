@@ -16,7 +16,7 @@ public class UserDAO extends AbstractDAO {
 	public void saveOrUpdate(User user) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(user);
+		session.merge(user);
 		session.getTransaction().commit();
 	}
 	

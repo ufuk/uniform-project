@@ -27,7 +27,7 @@ public class ArticleBO {
 	
 	public void delete(Article article) {
 		CommentBO commentBO = new CommentBO();
-		for (Comment comment : commentBO.getAllByArticle(article)) {
+		for (Comment comment : commentBO.getAllJustByArticle(article)) {
 			commentBO.delete(comment);
 		}
 		articleDAO.delete(article);

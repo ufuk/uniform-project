@@ -18,7 +18,7 @@ public class CommentDAO extends AbstractDAO {
 	public void saveOrUpdate(Comment comment) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(comment);
+		session.merge(comment);
 		session.getTransaction().commit();
 	}
 	
@@ -56,6 +56,17 @@ public class CommentDAO extends AbstractDAO {
 										.add(Restrictions.eq("confirmationStatus", Confirmation.CONFIRMED))
 										.add(Restrictions.eq("deleted", false))
 										.addOrder(Order.desc("publishedDate"));
+		List<Comment> comments = (ArrayList<Comment>) criteria.list();
+		session.getTransaction().commit();
+		return comments;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Comment> getAllJustByArticle(Article article) {
+		session = openSession();
+		session.beginTransaction();
+		Criteria criteria = session.createCriteria(Comment.class)
+										.add(Restrictions.eq("article", article));
 		List<Comment> comments = (ArrayList<Comment>) criteria.list();
 		session.getTransaction().commit();
 		return comments;

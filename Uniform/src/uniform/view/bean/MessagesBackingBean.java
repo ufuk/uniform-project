@@ -59,6 +59,7 @@ public class MessagesBackingBean extends AbstractBackingBean {
 		if (message.getSender().getId().equals(getUserBean().getCurrentUser().getId())) {
 			if (message.getDeletedPermanentlyByReceiver()) {
 				messageBO.delete(message);
+				return "messages?faces-redirect=true&type=ARCHIVE";
 			} else {
 				message.setDeletedPermanentlyBySender(true);
 				messageBO.saveOrUpdate(message);

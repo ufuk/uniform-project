@@ -76,8 +76,7 @@ public class ReadMessageBackingBean extends AbstractBackingBean {
 		reply.setContent(replyContent);
 		reply.setSentDate(new Date((new Date().getTime())));
 		reply.setId(replyBO.save(reply));
-		
-		message.getReplies().add(reply);
+
 		messageBO.saveOrUpdate(message);
 		
 		return "readAndReplyMessage?faces-redirect=true&messageId=" + message.getId();

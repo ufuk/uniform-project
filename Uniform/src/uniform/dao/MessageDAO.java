@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -17,16 +16,16 @@ public class MessageDAO extends AbstractDAO {
 	public void saveOrUpdate(Message message) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(message);
+		session.merge(message);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Message message) {
 		session = openSession();
 		session.beginTransaction();
-		Long id = (Long) session.save(message);
+		Message newMessage = (Message) session.merge(message);
 		session.getTransaction().commit();
-		return id;
+		return newMessage.getId();
 	}
 	
 	public void delete(Message message) {
@@ -40,7 +39,6 @@ public class MessageDAO extends AbstractDAO {
 		session = openSession();
 		session.beginTransaction();
 		Message message = (Message) session.get(Message.class, id);
-		Hibernate.initialize(message.getReplies());
 		session.getTransaction().commit();
 		return message;
 	}

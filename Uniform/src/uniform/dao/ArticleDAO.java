@@ -20,21 +20,22 @@ public class ArticleDAO extends AbstractDAO {
 	public void saveOrUpdate(Article article) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(article);
+		session.merge(article);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Article article) {
 		session = openSession();
 		session.beginTransaction();
-		Long id = (Long) session.save(article);
+		Article newArticle = (Article) session.merge(article);
 		session.getTransaction().commit();
-		return id;
+		return newArticle.getId();
 	}
 	
 	public void delete(Article article) {
 		session = openSession();
 		session.beginTransaction();
+		article.setLikedUsers(new ArrayList<User>());
 		session.delete(article);
 		session.getTransaction().commit();
 	}
@@ -47,7 +48,6 @@ public class ArticleDAO extends AbstractDAO {
 								.add(Restrictions.eq("id", id))
 								.addOrder(Order.desc("publishedDate"))
 								.uniqueResult();
-		// TODO: also initialize tags
 		Hibernate.initialize(article.getLikedUsers());
 		session.getTransaction().commit();
 		return article;

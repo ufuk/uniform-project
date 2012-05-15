@@ -15,16 +15,16 @@ public class ReplyDAO extends AbstractDAO {
 	public void saveOrUpdate(Reply reply) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(reply);
+		session.merge(reply);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Reply reply) {
 		session = openSession();
 		session.beginTransaction();
-		Long id = (Long) session.save(reply);
+		Reply newReply = (Reply) session.merge(reply);
 		session.getTransaction().commit();
-		return id;
+		return newReply.getId();
 	}
 	
 	public void delete(Reply reply) {

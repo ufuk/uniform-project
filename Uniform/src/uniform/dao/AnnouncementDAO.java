@@ -16,16 +16,16 @@ public class AnnouncementDAO extends AbstractDAO {
 	public void saveOrUpdate(Announcement announcement) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(announcement);
+		session.merge(announcement);
 		session.getTransaction().commit();
 	}
 	
 	public Long save(Announcement announcement) {
 		session = openSession();
 		session.beginTransaction();
-		Long id = (Long) session.save(announcement);
+		Announcement newAnnouncement = (Announcement) session.merge(announcement);
 		session.getTransaction().commit();
-		return id;
+		return newAnnouncement.getId();
 	}
 	
 	public void delete(Announcement announcement) {

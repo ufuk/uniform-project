@@ -14,7 +14,7 @@ public class DepartmentDAO extends AbstractDAO {
 	public void saveOrUpdate(Department department) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(department);
+		session.merge(department);
 		session.getTransaction().commit();
 	}
 	
