@@ -4,6 +4,7 @@ import java.util.List;
 
 import uniform.dao.MessageDAO;
 import uniform.entity.Message;
+import uniform.entity.Reply;
 import uniform.entity.User;
 
 public class MessageBO {
@@ -19,6 +20,10 @@ public class MessageBO {
 	}
 	
 	public void delete(Message message) {
+		ReplyBO replyBO = new ReplyBO();
+		for (Reply reply : replyBO.getByMessage(message)) {
+			replyBO.delete(reply);
+		}
 		messageDAO.delete(message);
 	}
 	

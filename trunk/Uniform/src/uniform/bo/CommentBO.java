@@ -32,6 +32,10 @@ public class CommentBO {
 		return commentDAO.getAllByArticle(article);
 	}
 	
+	public List<Comment> getAllJustByArticle(Article article) {
+		return commentDAO.getAllJustByArticle(article);
+	}
+	
 	public List<Comment> getAllByConfirmation(Confirmation confirmation) {
 		return commentDAO.getAllByConfirmation(confirmation);
 	}

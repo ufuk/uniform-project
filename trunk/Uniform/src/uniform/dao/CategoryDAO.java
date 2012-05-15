@@ -16,7 +16,7 @@ public class CategoryDAO extends AbstractDAO {
 	public void saveOrUpdate(Category category) {
 		session = openSession();
 		session.beginTransaction();
-		session.saveOrUpdate(category);
+		session.merge(category);
 		session.getTransaction().commit();
 	}
 	

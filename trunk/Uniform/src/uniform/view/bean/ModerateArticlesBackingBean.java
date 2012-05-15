@@ -69,7 +69,7 @@ public class ModerateArticlesBackingBean extends AbstractBackingBean {
 		article.setDeleted(false);
 		articleBO.saveOrUpdate(article);
 		
-		// Send a information message about rejection
+		// Send a information message about confirmation
 		if (article.getAuthor() != null) {
 			MessageBO messageBO = new MessageBO();
 			Message message = new Message();
@@ -90,7 +90,7 @@ public class ModerateArticlesBackingBean extends AbstractBackingBean {
 		article.setConfirmationStatus(Confirmation.NOT_CONFIRMED);
 		articleBO.saveOrUpdate(article);
 		
-		// Send a information message about confirmation
+		// Send a information message about rejection
 		if (article.getAuthor() != null) {
 			MessageBO messageBO = new MessageBO();
 			Message message = new Message();

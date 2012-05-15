@@ -70,15 +70,17 @@ public class ModerateCommentsBackingBean extends AbstractBackingBean {
 		commentBO.saveOrUpdate(comment);
 		
 		// Send a information message about confirmation
-		MessageBO messageBO = new MessageBO();
-		Message message = new Message();
-		message.setTitle("Yorumunuz Yayýnlandý");
-		message.setSender(getUserBean().getCurrentUser());
-		message.setReceiver(comment.getAuthor());
-		message.setSentDate(new Date((new Date().getTime())));
-		message.setContent("'" + comment.getArticle().getTitle() +
-				"' baþlýklý makaleye yapmýþ olduðunuz yorum yayýna alýnmýþtýr. Katkýlarýnýzdan dolayý teþekkür ederiz.");
-		messageBO.saveOrUpdate(message);
+		if (comment.getAuthor() != null) {
+			MessageBO messageBO = new MessageBO();
+			Message message = new Message();
+			message.setTitle("Yorumunuz Yayýnlandý");
+			message.setSender(getUserBean().getCurrentUser());
+			message.setReceiver(comment.getAuthor());
+			message.setSentDate(new Date((new Date().getTime())));
+			message.setContent("'" + comment.getArticle().getTitle() +
+					"' baþlýklý makaleye yapmýþ olduðunuz yorum yayýna alýnmýþtýr. Katkýlarýnýzdan dolayý teþekkür ederiz.");
+			messageBO.saveOrUpdate(message);
+		}
 		
 		return "moderateComments?faces-redirect=true&confirmationStatus=" + confirmationStatus;
 	}
@@ -87,6 +89,20 @@ public class ModerateCommentsBackingBean extends AbstractBackingBean {
 		CommentBO commentBO = new CommentBO();
 		comment.setConfirmationStatus(Confirmation.NOT_CONFIRMED);
 		commentBO.saveOrUpdate(comment);
+		
+		// Send a information message about rejection
+		if (comment.getAuthor() != null) {
+			MessageBO messageBO = new MessageBO();
+			Message message = new Message();
+			message.setTitle("Yorumunuz Reddedildi");
+			message.setSender(getUserBean().getCurrentUser());
+			message.setReceiver(comment.getAuthor());
+			message.setSentDate(new Date((new Date().getTime())));
+			message.setContent("'" + comment.getArticle().getTitle() +
+					"' baþlýklý makaleye yapmýþ olduðunuz yorum yönetici tarafýndan uygun bulunmamýþtýr!");
+			messageBO.saveOrUpdate(message);
+		}
+				
 		return "moderateComments?faces-redirect=true&confirmationStatus=" + confirmationStatus;
 	}
 	

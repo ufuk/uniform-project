@@ -38,9 +38,6 @@ public class Article implements Serializable {
 	@ManyToMany
 	private List<User> likedUsers = new ArrayList<User>();
 	
-	@ManyToMany
-	private List<Tag> tags = new ArrayList<Tag>();
-	
 	@ManyToOne
 	private Category category;
 	
@@ -98,14 +95,6 @@ public class Article implements Serializable {
 
 	public void setAuthor(User author) {
 		this.author = author;
-	}
-
-	public List<Tag> getTags() {
-		return tags;
-	}
-
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
 	}
 
 	public Category getCategory() {
