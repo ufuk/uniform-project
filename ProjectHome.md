@@ -1,0 +1,1 @@
+An online university magazine for IBM's Smart Planet.
